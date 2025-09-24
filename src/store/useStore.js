@@ -33,6 +33,38 @@ const useStore = create((set, get) => {
       }
     },
 
+    // --- Produk ---
+    addProduct: async (data) => {
+    const res = await api.post('/products', data);
+    set((state) => ({ products: [...state.products, res.data] }));
+    },
+    updateProduct: async (id, data) => {
+    await api.put(`/products/${id}`, data);
+    set((state) => ({
+        products: state.products.map(p => p.id == id ? { ...p, ...data } : p)
+    }));
+    },
+    deleteProduct: async (id) => {
+    await api.delete(`/products/${id}`);
+    set((state) => ({ products: state.products.filter(p => p.id != id) }));
+    },
+
+    // --- Customer ---
+    addCustomer: async (data) => {
+    const res = await api.post('/customers', data);
+    set((state) => ({ customers: [...state.customers, res.data] }));
+    },
+    updateCustomer: async (id, data) => {
+    await api.put(`/customers/${id}`, data);
+    set((state) => ({
+        customers: state.customers.map(c => c.id == id ? { ...c, ...data } : c)
+    }));
+    },
+    deleteCustomer: async (id) => {
+    await api.delete(`/customers/${id}`);
+    set((state) => ({ customers: state.customers.filter(c => c.id != id) }));
+    },
+
     // Orders: simpan di localStorage
     saveOrders: (orders) => {
       if (typeof window !== 'undefined') {
