@@ -1,10 +1,38 @@
 export default function Modal({ title, fields, initialValues, onSubmit, onClose }) {
+  const renderField = (field) => {
+    const value = initialValues[field.name] ?? field.defaultValue ?? '';
+    if (field.type === 'select') {
+      return (
+        <select
+          name={field.name}
+          defaultValue={value}
+          className="w-full p-2 border rounded"
+          required={field.required}
+        >
+          {field.options.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      );
+    }
+    return (
+      <input
+        type={field.type}
+        name={field.name}
+        defaultValue={value}
+        min={field.min}
+        className="w-full p-2 border rounded"
+        required={field.required}
+      />
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = {};
     fields.forEach((field) => {
-      formData[field.name] = e.target[field.name].value;
-      if (field.type === 'number') formData[field.name] = Number(formData[field.name]);
+      const val = e.target[field.name].value;
+      formData[field.name] = field.type === 'number' ? Number(val) : val;
     });
     onSubmit(formData);
   };
@@ -17,13 +45,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
           {fields.map((field) => (
             <div key={field.name}>
               <label className="block text-sm mb-1">{field.label}</label>
-              <input
-                type={field.type}
-                name={field.name}
-                defaultValue={initialValues[field.name] || ''}
-                className="w-full p-2 border rounded"
-                required={field.required}
-              />
+              {renderField(field)}
             </div>
           ))}
           <div className="flex justify-end gap-2 pt-4 border-t">
