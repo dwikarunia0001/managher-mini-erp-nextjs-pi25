@@ -51,11 +51,11 @@ export default function Sidebar() {
         </button>
         {erpOpen && (
           <ul className="mt-2 space-y-1 text-sm">
-            <li><Link href="/dashboard" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/dashboard') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>📊 Dashboard</Link></li>
-            <li><Link href="/products" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/products') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>📦 Produk</Link></li>
-            <li><Link href="/customers" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/customers') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>👩 Customer</Link></li>
-            <li><Link href="/orders" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/orders') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>🛒 Order</Link></li>
-            <li><Link href="/sales" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/sales') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Sales</Link></li>
+            <li><Link href="/erp/dashboard" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/dashboard') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>📊 Dashboard</Link></li>
+            <li><Link href="/erp/products" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/products') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>📦 Produk</Link></li>
+            <li><Link href="/erp/customers" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/customers') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>👩 Customer</Link></li>
+            <li><Link href="/erp/orders" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/orders') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>🛒 Order</Link></li>
+            <li><Link href="/erp/sales" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/sales') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Sales</Link></li>
           </ul>
         )}
       </div>

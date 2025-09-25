@@ -5,12 +5,11 @@ import useStore from '@/store/useStore';
 import Link from 'next/link';
 
 export default function DashboardPage() {
-  const { products, customers, orders, fetchProducts, fetchCustomers, fetchOrders } = useStore();
+  const { products, customers, orders, fetchProducts, fetchCustomers } = useStore();
 
   useEffect(() => {
     fetchProducts();
     fetchCustomers();
-    fetchOrders();
   }, []);
 
   const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
