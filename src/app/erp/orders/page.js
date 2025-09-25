@@ -49,7 +49,7 @@ export default function OrdersPage() {
             const customer = customers.find(c => c.id == o.customerId)?.name || '—';
             const product = products.find(p => p.id == o.productId)?.name || '—';
             return (
-              <div key={o.id} className="bg-white p-4 rounded-xl border">
+              <div key={o.id} className="bg-white p-4 rounded-xl">
                 <div className="flex justify-between">
                   <div>
                     <div><strong>{customer}</strong> membeli <strong>{product}</strong></div>

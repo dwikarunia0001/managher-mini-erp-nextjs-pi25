@@ -40,7 +40,7 @@ export default function ProductsPage() {
           <p className="text-slate-500">Belum ada produk.</p>
         ) : (
           products.map((p) => (
-            <div key={p.id} className="bg-white p-4 rounded-xl border flex justify-between items-center">
+            <div key={p.id} className="bg-white p-4 rounded-xl flex justify-between items-center">
               <div>
                 <strong>{p.name}</strong><br />
                 <span className="text-pink-600">Rp {Number(p.price).toLocaleString()}</span>

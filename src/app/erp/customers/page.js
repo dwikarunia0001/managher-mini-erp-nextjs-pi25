@@ -40,7 +40,7 @@ export default function CustomersPage() {
           <p className="text-slate-500">Belum ada customer.</p>
         ) : (
           customers.map((c) => (
-            <div key={c.id} className="bg-white p-4 rounded-xl border flex justify-between items-center">
+            <div key={c.id} className="bg-white p-4 rounded-xl flex justify-between items-center">
               <div>
                 <strong>{c.name}</strong><br />
                 <span className="text-slate-600">{c.contact || '-'}</span>
