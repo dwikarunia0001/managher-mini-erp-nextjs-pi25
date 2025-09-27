@@ -2,13 +2,15 @@ import { create } from 'zustand';
 import api from '@/lib/api';
 
 const useStore = create((set, get) => {
-  // Load orders from localStorage on init
+  // Load data from localStorage on init
   const savedOrders = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('orders') || '[]') : [];
+  const savedExpenses = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('expenses') || '[]') : [];
 
   return {
     products: [],
     customers: [],
     orders: savedOrders,
+    expenses: savedExpenses,
     loading: false,
 
     // Fetch dari MockAPI
@@ -65,7 +67,7 @@ const useStore = create((set, get) => {
     set((state) => ({ customers: state.customers.filter(c => c.id != id) }));
     },
 
-    // Orders: simpan di localStorage
+    // --- Orders ---
     saveOrders: (orders) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('orders', JSON.stringify(orders));
@@ -91,6 +93,30 @@ const useStore = create((set, get) => {
     deleteOrder: (id) => {
       const orders = get().orders.filter(o => o.id !== id);
       get().saveOrders(orders);
+    },
+
+    // --- Expenses ---
+    saveExpenses: (expenses) => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+      }
+      set({ expenses });
+    },
+
+    addExpense: (data) => {
+      const newExpense = { id: Date.now().toString(), ...data };
+      const expenses = [...get().expenses, newExpense];
+      get().saveExpenses(expenses);
+    },
+
+    updateExpense: (id, data) => {
+      const expenses = get().expenses.map(e => e.id == id ? { ...e, ...data } : e);
+      get().saveExpenses(expenses);
+    },
+
+    deleteExpense: (id) => {
+      const expenses = get().expenses.filter(e => e.id !== id);
+      get().saveExpenses(expenses);
     },
   };
 });

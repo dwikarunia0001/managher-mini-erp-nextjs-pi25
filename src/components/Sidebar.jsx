@@ -21,25 +21,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Solopreneur Journey */}
-      <div className="mb-4">
-        <button
-          onClick={() => setJourneyOpen(!journeyOpen)}
-          className="flex items-center justify-between w-full text-xs font-semibold text-slate-500 uppercase tracking-wider"
-        >
-          Solopreneur Journey
-          <span>{journeyOpen ? '▲' : '▼'}</span>
-        </button>
-        {journeyOpen && (
-          <ul className="mt-2 space-y-1 text-sm">
-            <li><button className="w-full text-left p-2 rounded hover:bg-slate-100">Level 1 — Ide Bisnis</button></li>
-            <li><button className="w-full text-left p-2 rounded hover:bg-slate-100">Level 2 — Validasi Ide</button></li>
-            <li><button className="w-full text-left p-2 rounded hover:bg-slate-100">Level 3 — Prototype & Feedback</button></li>
-            <li><button className="w-full text-left p-2 rounded hover:bg-slate-100">Level 4 — Business Model Canvas</button></li>
-          </ul>
-        )}
-      </div>
-
       {/* Mini ERP */}
       <div>
         <button
@@ -56,6 +37,7 @@ export default function Sidebar() {
             <li><Link href="/erp/customers" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/customers') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>👩 Customer</Link></li>
             <li><Link href="/erp/orders" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/orders') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>🛒 Order</Link></li>
             <li><Link href="/erp/sales" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/sales') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Sales</Link></li>
+            <li><Link href="/erp/expenses" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/expenses') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Expense</Link></li>
           </ul>
         )}
       </div>
