@@ -83,6 +83,11 @@ const useStore = create((set, get) => {
       get().saveOrders(orders);
     },
 
+    updateOrder: (id, data) => {
+      const orders = get().orders.map(o => o.id == id ? { ...o, ...data } : o);
+      get().saveOrders(orders);
+    },
+
     deleteOrder: (id) => {
       const orders = get().orders.filter(o => o.id !== id);
       get().saveOrders(orders);
