@@ -37,7 +37,7 @@ export default function Sidebar() {
             <li><Link href="/erp/customers" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/customers') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>👩 Customer</Link></li>
             <li><Link href="/erp/orders" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/orders') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>🛒 Order</Link></li>
             <li><Link href="/erp/sales" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/sales') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Sales</Link></li>
-            <li><Link href="/erp/expenses" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/expenses') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>💰 Expense</Link></li>
+            <li><Link href="/erp/expenses" className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/expenses') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}>📥 Expense</Link></li>
           </ul>
         )}
       </div>
