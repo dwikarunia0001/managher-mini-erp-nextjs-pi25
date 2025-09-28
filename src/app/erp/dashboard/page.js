@@ -36,6 +36,8 @@ export default function DashboardPage() {
     p.stock !== undefined && p.stock <= 5 && p.stock >= 0
   );
 
+  
+
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-6">
       {/* Header */}
