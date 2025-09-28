@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+:root {
+  --accent1: #ff6fa2;
+  --accent2: #6ecbff;
+  --bg1: #fdfbff;
+  --bg2: #f5f7ff;
+}
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  color: #0f172a;
+}
+
+.grad-accent {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(8, 15, 52, 0.08);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.08);
+  border-color: rgba(110, 203, 255, 0.6);
+}
+
+.anim-fade {
+  transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
 /*
 :root {
   --background: #ffffff;
