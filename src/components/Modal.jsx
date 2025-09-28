@@ -96,7 +96,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
           </div>
 
           {/* Konten Form */}
-          <div className="max-h-[60vh] overflow-y-auto p-6">
+          <div className="max-h-[80vh] overflow-y-auto p-6 pb-10">
             <form id="modal-form" onSubmit={handleSubmit} className="space-y-5">
               {fields.map((field, index) => {
                 const classes = getColorClasses(index); // ✅ gunakan index langsung
@@ -115,7 +115,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         name={field.name}
                         value={value}
                         onChange={handleChange}
-                        className={`w-full p-3 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
                         required={field.required}
                       >
                         <option value="">Pilih...</option>
@@ -130,7 +130,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         onChange={handleChange}
                         rows={field.rows || 3}
                         placeholder={field.placeholder}
-                        className={`w-full p-3 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
                         required={field.required}
                       />
                     ) : (
@@ -142,7 +142,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         min={field.min}
                         max={field.max}
                         placeholder={field.placeholder}
-                        className={`w-full p-3 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
                         required={field.required}
                       />
                     )}
