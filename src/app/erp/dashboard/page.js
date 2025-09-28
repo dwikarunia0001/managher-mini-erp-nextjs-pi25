@@ -134,37 +134,6 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-
-      {/* 🚀 Aksi Cepat */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-100">
-        <h3 className="font-semibold mb-4">🚀 Aksi Cepat untuk Pemula</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <Link
-            href="/erp/products"
-            className="block w-full p-3 text-left bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition"
-          >
-            ➕ Tambah Produk Pertamaku
-          </Link>
-          <Link
-            href="/erp/customers"
-            className="block w-full p-3 text-left bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition"
-          >
-            ➕ Tambah Customer Pertamaku
-          </Link>
-          <Link
-            href="/erp/orders"
-            className="block w-full p-3 text-left bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition"
-          >
-            ➕ Catat Order Pertamaku
-          </Link>
-          <Link
-            href="/erp/expenses"
-            className="block w-full p-3 text-left bg-rose-50 text-rose-700 rounded-lg hover:bg-rose-100 transition"
-          >
-            ➕ Catat Pengeluaran Hari Ini
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }
