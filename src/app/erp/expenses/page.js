@@ -40,7 +40,7 @@ export default function ExpensesPage() {
   const totalExpenses = expenses.reduce((sum, e) => sum + (e.total || 0), 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-6">
+    <div className="lg:w-[970px] px-4 lg:px-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-slate-800">📥 Pengeluaran</h1>
         <button

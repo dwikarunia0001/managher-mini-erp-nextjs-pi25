@@ -11,7 +11,6 @@ export default function Sidebar() {
 
   const isActive = (path) => pathname === path;
 
-  // Tutup sidebar mobile saat resize ke desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -30,7 +29,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Overlay Mobile */}
       {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -38,13 +36,13 @@ export default function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-sm p-4 z-50 transition-transform duration-220 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0 lg:z-10 lg:block
         `}
       >
+        {/* Logo & Brand */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#ff6fa2] to-[#6ecbff] grid place-items-center text-white font-bold shadow-md">
             MH
@@ -53,6 +51,17 @@ export default function Sidebar() {
             <div className="font-semibold">ManagHer ERP</div>
             <div className="text-xs text-slate-500">Solopreneur Tools</div>
           </div>
+        </div>
+
+        {/* 💖 Panduan untuk Pemula (SELALU TAMPIL) */}
+        <div className="mb-6 p-3 bg-pink-50 rounded-lg border border-pink-200">
+          <p className="text-xs text-pink-700 font-medium">
+            💖 Halo, Solopreneur!  
+            <br />
+            <span className="font-normal">
+              Kamu tidak perlu modal besar. Mulai dari 1 produk, 1 customer, dan 1 langkah kecil hari ini!
+            </span>
+          </p>
         </div>
 
         {/* Mini ERP */}
@@ -66,6 +75,15 @@ export default function Sidebar() {
           </button>
           {erpOpen && (
             <ul className="mt-2 space-y-1 text-sm">
+              <li>
+                <Link
+                  href="/erp/guide"
+                  className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/guide') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}
+                  onClick={closeMobile}
+                >
+                  📖 Panduan Pemula
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/erp/dashboard"
@@ -124,7 +142,10 @@ export default function Sidebar() {
           )}
         </div>
 
-        <div className="mt-auto pt-4 text-xs text-slate-500">v1.0 — MVP</div>
+        {/* Kalimat Penutup */}
+        <div className="mt-auto pt-4 text-xs text-slate-500">
+          <p className="mb-1">v1.0 — ManagHer Mini ERP</p>
+        </div>
       </aside>
 
       {/* Mobile Toggle Button */}
