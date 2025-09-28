@@ -53,18 +53,25 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* 💖 Panduan untuk Pemula (SELALU TAMPIL) */}
+        {/* 💖 Panduan untuk Pemula + Tombol */}
         <div className="mb-6 p-3 bg-pink-50 rounded-lg border border-pink-200">
-          <p className="text-xs text-pink-700 font-medium">
+          <p className="text-xs text-pink-700 font-medium mb-2">
             💖 Halo, Solopreneur!  
             <br />
             <span className="font-normal">
               Kamu tidak perlu modal besar. Mulai dari 1 produk, 1 customer, dan 1 langkah kecil hari ini!
             </span>
           </p>
+          <Link
+            href="/erp/guide"
+            className="inline-block w-full text-center px-3 py-1.5 text-xs font-medium text-pink-700 bg-white rounded-lg border border-pink-200 hover:bg-pink-100 transition"
+            onClick={closeMobile}
+          >
+            📖 Panduan Pemula
+          </Link>
         </div>
 
-        {/* Mini ERP */}
+        {/* Mini ERP (tanpa menu Panduan Pemula) */}
         <div>
           <button
             onClick={() => setErpOpen(!erpOpen)}
@@ -75,15 +82,6 @@ export default function Sidebar() {
           </button>
           {erpOpen && (
             <ul className="mt-2 space-y-1 text-sm">
-              <li>
-                <Link
-                  href="/erp/guide"
-                  className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/guide') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}
-                  onClick={closeMobile}
-                >
-                  📖 Panduan Pemula
-                </Link>
-              </li>
               <li>
                 <Link
                   href="/erp/dashboard"
