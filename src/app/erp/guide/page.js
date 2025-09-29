@@ -21,8 +21,8 @@ export default function GuidePage() {
         <p className="font-medium mt-2 text-slate-800">— Ibu Rina, Bandung</p>
       </div>
 
-      {/* Langkah-Langkah */}
-      <div className="space-y-8">
+      {/* Langkah-Langkah dalam Card Warna-Warni */}
+      <div className="space-y-6">
         {[
           {
             step: 1,
@@ -61,22 +61,42 @@ export default function GuidePage() {
             cta: "Laba & Rugi"
           }
         ].map((step, idx) => (
-          <div key={idx} className="flex flex-col md:flex-row gap-6 items-start">
-            <div className={`w-12 h-12 rounded-full bg-${step.color}-100 text-${step.color}-700 flex items-center justify-center font-bold text-lg flex-shrink-0`}>
-              {step.step}
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h2>
-              <p className="text-slate-600 mb-4">{step.desc}</p>
-              <pre className="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 whitespace-pre-wrap mb-4 border border-slate-200">
-                {step.example}
-              </pre>
+          <div
+            key={idx}
+            className={`rounded-2xl p-6 shadow-sm border ${
+              step.color === 'pink' ? 'bg-pink-50 border-pink-200' :
+              step.color === 'blue' ? 'bg-blue-50 border-blue-200' :
+              step.color === 'green' ? 'bg-green-50 border-green-200' :
+              'bg-purple-50 border-purple-200'
+            }`}
+          >
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                step.color === 'pink' ? 'bg-pink-100 text-pink-700' :
+                step.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+                step.color === 'green' ? 'bg-green-100 text-green-700' :
+                'bg-purple-100 text-purple-700'
+              }`}>
+                <span className="font-bold text-lg">{step.step}</span>
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h2>
+                <p className="text-slate-600 mb-4">{step.desc}</p>
+                <pre className="bg-white p-4 rounded-lg text-sm text-slate-700 whitespace-pre-wrap mb-4 border border-slate-200">
+                  {step.example}
+                </pre>
                 <Link
                   href={step.href}
-                  className={`inline-flex items-center gap-1 text-${step.color}-600 hover:text-${step.color}-800 font-medium`}
+                  className={`inline-flex items-center gap-1 font-medium ${
+                    step.color === 'pink' ? 'text-pink-600 hover:text-pink-800' :
+                    step.color === 'blue' ? 'text-blue-600 hover:text-blue-800' :
+                    step.color === 'green' ? 'text-green-600 hover:text-green-800' :
+                    'text-purple-600 hover:text-purple-800'
+                  }`}
                 >
                   ➕ Lanjutkan ke {step.cta}
                 </Link>
+              </div>
             </div>
           </div>
         ))}
