@@ -2,14 +2,12 @@
 
 import { useEffect } from 'react';
 import useStore from '@/store/useStore';
-import Link from 'next/link';
 
 export default function DashboardPage() {
   const {
     products,
     customers,
     orders,
-    expenses,
     fetchProducts,
     fetchCustomers,
   } = useStore();
@@ -23,8 +21,24 @@ export default function DashboardPage() {
   const totalProducts = products.length;
   const totalCustomers = customers.length;
   const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-  const totalExpenses = expenses.reduce((sum, e) => sum + (e.total || 0), 0);
+
+  // 🔥 Pendapatan HANYA dari order SELESAI
+  const totalRevenue = orders
+    .filter(order => order.status === 'Selesai')
+    .reduce((sum, order) => sum + (order.total || 0), 0);
+
+  // 🔥 Pengeluaran HANYA dari order SELESAI
+  const totalExpenses = orders
+    .filter(order => order.status === 'Selesai')
+    .reduce((sum, order) => {
+      const product = products.find(p => p.id == order.productId);
+      if (!product) return sum;
+
+      const unitCost = (Number(product.materialCost) || 0) + (Number(product.otherCost) || 0);
+      const orderCost = unitCost * (Number(order.quantity) || 0);
+      return sum + orderCost;
+    }, 0);
+
   const netProfit = totalRevenue - totalExpenses;
 
   // === STATUS ORDER ===
@@ -36,7 +50,24 @@ export default function DashboardPage() {
     p.stock !== undefined && p.stock <= 5 && p.stock >= 0
   );
 
-  
+  // === LOGIKA WARNA LABA/RUGI ===
+  const isProfit = netProfit >= 0;
+  const bgColor = isProfit 
+    ? 'from-emerald-50 to-teal-50' 
+    : 'from-rose-50 to-pink-50';
+  const borderColor = isProfit 
+    ? 'border-emerald-200' 
+    : 'border-rose-200';
+  const textColor = isProfit 
+    ? 'text-emerald-800' 
+    : 'text-rose-800';
+  const subTextColor = isProfit 
+    ? 'text-emerald-600' 
+    : 'text-rose-600';
+  const valueColor = isProfit 
+    ? 'text-emerald-700' 
+    : 'text-rose-700';
+  const statusText = isProfit ? 'Untung' : 'Rugi';
 
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-6">
@@ -59,7 +90,7 @@ export default function DashboardPage() {
             </span>
           </p>
           <ul className="mt-2 text-sm text-pink-600 list-disc pl-5 space-y-1">
-            <li>Tambahkan minimal <strong>1 produk</strong></li>
+            <li>Tambahkan minimal <strong>1 produk</strong> (dengan biaya bahan & biaya lain-lain)</li>
             <li>Tambahkan minimal <strong>1 customer</strong></li>
           </ul>
         </div>
@@ -70,19 +101,29 @@ export default function DashboardPage() {
         <StatCard title="Total Produk" value={totalProducts} icon="📦" color="text-pink-500" />
         <StatCard title="Total Customer" value={totalCustomers} icon="👩" color="text-blue-500" />
         <StatCard title="Total Order" value={totalOrders} icon="🛒" color="text-green-500" />
-        <StatCard title="Pendapatan" value={`Rp ${totalRevenue.toLocaleString()}`} icon="💰" color="text-purple-500" />
-        <StatCard title="Pengeluaran" value={`Rp ${totalExpenses.toLocaleString()}`} icon="📥" color="text-rose-500" />
+        <StatCard 
+          title="Pendapatan" 
+          value={`Rp ${totalRevenue.toLocaleString()}`} 
+          icon="💰" 
+          color="text-purple-500" 
+        />
+        <StatCard 
+          title="Pengeluaran" 
+          value={`Rp ${totalExpenses.toLocaleString()}`} 
+          icon="📥" 
+          color="text-rose-500" 
+        />
       </div>
 
-      {/* 💰 Laba Bersih */}
-      <div className="mb-8 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5">
+      {/* 💰 Laba Bersih — DINAMIS: HIJAU (UNTUNG) / MERAH (RUGI) */}
+      <div className={`mb-8 bg-gradient-to-r ${bgColor} border ${borderColor} rounded-2xl p-5`}>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h3 className="font-semibold text-emerald-800">Laba Bersih Hari Ini</h3>
-            <p className="text-sm text-emerald-600">Pendapatan – Pengeluaran</p>
+            <h3 className={`font-semibold ${textColor}`}>Laba Bersih Hari Ini</h3>
+            <p className={`text-sm ${subTextColor}`}>Pendapatan – Pengeluaran ({statusText})</p>
           </div>
-          <div className="text-2xl font-bold text-emerald-700">
-            Rp {netProfit.toLocaleString()}
+          <div className={`text-2xl font-bold ${valueColor}`}>
+            Rp {Math.abs(netProfit).toLocaleString()}
           </div>
         </div>
       </div>
@@ -139,7 +180,6 @@ export default function DashboardPage() {
 }
 
 // === Komponen Pendukung ===
-
 function StatCard({ title, value, icon, color }) {
   return (
     <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow text-center">
