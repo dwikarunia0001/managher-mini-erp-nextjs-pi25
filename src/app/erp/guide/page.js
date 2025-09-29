@@ -4,15 +4,7 @@ import Link from 'next/link';
 
 export default function GuidePage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-pink-700">🍰 Panduan untuk para Womanpreneur</h1>
-        <p className="text-slate-600 mt-2">
-          Ibu rumah tangga 30 tahun yang jago bikin kue — ingin mulai bisnis dari 0, tapi bingung mulai dari mana?
-        </p>
-      </div>
-
+    <div className="max-w-7xl mx-auto px-4">
       {/* Studi Kasus */}
       <div className="bg-white p-5 rounded-2xl border border-pink-100 mb-8">
         <p className="text-pink-700 italic">
@@ -87,31 +79,6 @@ export default function GuidePage() {
             </Link>
           </div>
         </div>
-      </div>
-
-      {/* Progress Tracking */}
-      <div className="mt-10 bg-gradient-to-r from-pink-50 to-purple-50 p-5 rounded-2xl border border-pink-200 text-center">
-        <p className="font-medium text-pink-700">✨ Progress Bisnismu, Ibu Rina!</p>
-        <div className="mt-3 flex justify-center gap-1">
-          {[1, 2, 3, 4].map((step) => (
-            <div
-              key={step}
-              className={`w-3 h-3 rounded-full ${
-                step <= 1 ? 'bg-pink-500' : 'bg-slate-200'
-              }`}
-            />
-          ))}
-        </div>
-        <p className="text-sm text-slate-600 mt-2">
-          Kamu sudah di langkah 1 dari 4. Lanjutkan!
-        </p>
-      </div>
-
-      {/* Penutup */}
-      <div className="text-center mt-8">
-        <p className="text-slate-700">
-          Tidak perlu jadi akuntan. Cukup catat setiap langkah kecil — ManagHer yang hitung untung-ruginya untukmu. 💖
-        </p>
       </div>
     </div>
   );

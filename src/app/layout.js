@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <div className="flex min-h-screen bg-gray-50">
           {!hideSidebar && <Sidebar />}
-          <div className={`flex-1 ${!hideSidebar ? 'flex flex-col flex-1 lg:ml-64' : ''}`}>
+          <div className={`flex-1 ${!hideSidebar ? 'lg:ml-64' : ''}`}>
             <Header />
             <main className="p-4 lg:p-6 pt-20 lg:pt-6">{children}</main>
           </div>

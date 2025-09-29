@@ -14,7 +14,14 @@ export default function ProductsPage() {
   }, []);
 
   const handleSubmit = async (data) => {
-    const payload = { ...data };
+    // Pastikan nilai numerik dikonversi ke number
+    const payload = {
+      ...data,
+      price: Number(data.price) || 0,
+      materialCost: Number(data.materialCost) || 0,
+      otherCost: Number(data.otherCost) || 0,
+      stock: data.stock ? Number(data.stock) : undefined,
+    };
     if (!payload.image) delete payload.image;
 
     if (editing) {
@@ -52,7 +59,9 @@ export default function ProductsPage() {
                 <th className="p-3 text-left w-12">#</th>
                 <th className="p-3 text-left">Gambar</th>
                 <th className="p-3 text-left">Nama</th>
-                <th className="p-3 text-left">Harga</th>
+                <th className="p-3 text-left">Harga Jual</th>
+                <th className="p-3 text-left">Biaya Bahan</th>
+                <th className="p-3 text-left">Biaya Lain-lain</th>
                 <th className="p-3 text-left">Kategori</th>
                 <th className="p-3 text-left">Stok</th>
                 <th className="p-3 text-right">Aksi</th>
@@ -61,7 +70,7 @@ export default function ProductsPage() {
             <tbody className="divide-y divide-slate-100">
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="p-8 text-center text-slate-500">
+                  <td colSpan="9" className="p-8 text-center text-slate-500">
                     Belum ada produk.
                   </td>
                 </tr>
@@ -84,7 +93,15 @@ export default function ProductsPage() {
                       )}
                     </td>
                     <td className="p-3 font-medium text-slate-800">{p.name}</td>
-                    <td className="p-3 text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</td>
+                    <td className="p-3 text-pink-600 font-medium">
+                      Rp {Number(p.price || 0).toLocaleString()}
+                    </td>
+                    <td className="p-3 text-slate-700">
+                      Rp {Number(p.materialCost || 0).toLocaleString()}
+                    </td>
+                    <td className="p-3 text-slate-700">
+                      Rp {Number(p.otherCost || 0).toLocaleString()}
+                    </td>
                     <td className="p-3 text-slate-700">{p.category || '—'}</td>
                     <td className="p-3">
                       {p.stock !== undefined ? (
@@ -158,8 +175,12 @@ export default function ProductsPage() {
                     <h3 className="font-medium text-slate-800 truncate">{p.name}</h3>
                     <span className="text-xs text-slate-500 ml-2">#{index + 1}</span>
                   </div>
-                  <p className="text-pink-600 font-medium mt-1">Rp {Number(p.price).toLocaleString()}</p>
-                  <div className="mt-2 text-sm text-slate-600 space-y-1">
+                  <p className="text-pink-600 font-medium mt-1">
+                    Jual: Rp {Number(p.price || 0).toLocaleString()}
+                  </p>
+                  <div className="text-sm text-slate-600 space-y-1 mt-1">
+                    <div>Biaya Bahan: Rp {Number(p.materialCost || 0).toLocaleString()}</div>
+                    <div>Biaya Lain: Rp {Number(p.otherCost || 0).toLocaleString()}</div>
                     <div><span className="font-medium">Kategori:</span> {p.category || '—'}</div>
                     <div>
                       <span className="font-medium">Stok:</span>{' '}
@@ -208,7 +229,9 @@ export default function ProductsPage() {
           title={editing ? 'Edit Produk' : 'Tambah Produk'}
           fields={[
             { name: 'name', label: 'Nama Produk', type: 'text', required: true },
-            { name: 'price', label: 'Harga (Rp)', type: 'number', required: true },
+            { name: 'price', label: 'Harga Jual (Rp)', type: 'number', required: true, min: 0 },
+            { name: 'materialCost', label: 'Biaya Bahan (Rp)', type: 'number', min: 0 },
+            { name: 'otherCost', label: 'Biaya Lain-lain (Rp)', type: 'number', min: 0 },
             { name: 'category', label: 'Kategori', type: 'text' },
             { name: 'stock', label: 'Stok', type: 'number', min: 0 },
             { name: 'image', label: 'URL Gambar (opsional)', type: 'text' },
