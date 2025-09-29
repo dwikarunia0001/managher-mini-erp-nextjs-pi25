@@ -41,16 +41,9 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6">
       {/* Header */}
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-3">
-          <span className="text-3xl">📊</span>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-            Dashboard Bisnismu
-          </h1>
-        </div>
-        <p className="text-slate-600 mt-2">
-          Semua data penting dalam satu tampilan — segar & jelas!
-        </p>
+      <div className='mb-8'>
+        <h1 className="text-2xl font-bold text-slate-800">📊 Dashboard</h1>
+        <p className="text-slate-600 text-sm mt-1">Semua data penting dalam satu tampilan — segar & jelas!</p>
       </div>
 
       {/* Panduan Pemula */}
