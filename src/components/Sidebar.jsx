@@ -118,15 +118,6 @@ export default function Sidebar() {
                   🛒 Order
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/erp/sales"
-                  className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/sales') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}
-                  onClick={closeMobile}
-                >
-                  💰 Sales
-                </Link>
-              </li>
             </ul>
           )}
         </div>
