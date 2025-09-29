@@ -119,7 +119,7 @@ export default function DashboardPage() {
       <div className={`mb-8 bg-gradient-to-r ${bgColor} border ${borderColor} rounded-2xl p-5`}>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h3 className={`font-semibold ${textColor}`}>Laba Bersih Hari Ini</h3>
+            <h3 className={`font-semibold ${textColor}`}>Laporan Untung / Rugi Hari Ini</h3>
             <p className={`text-sm ${subTextColor}`}>Pendapatan – Pengeluaran ({statusText})</p>
           </div>
           <div className={`text-2xl font-bold ${valueColor}`}>

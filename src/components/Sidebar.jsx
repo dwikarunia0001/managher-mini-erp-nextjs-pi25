@@ -127,15 +127,6 @@ export default function Sidebar() {
                   💰 Sales
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/erp/expenses"
-                  className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/expenses') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}
-                  onClick={closeMobile}
-                >
-                  📥 Expense
-                </Link>
-              </li>
             </ul>
           )}
         </div>
