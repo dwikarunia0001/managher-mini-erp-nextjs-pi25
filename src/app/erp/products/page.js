@@ -269,7 +269,7 @@ export default function ProductsPage() {
                 <th className="p-4 text-left">Nama</th>
                 <th className="p-4 text-left whitespace-nowrap">Harga Jual</th>
                 <th className="p-4 text-left whitespace-nowrap">Biaya Total</th>
-                <th className="p-4 text-left">Laba/Unit</th>
+                <th className="p-4 text-left">L/R per Unit</th>
                 <th className="p-4 text-left">Kategori</th>
                 <th className="p-4 text-left">Stok</th>
                 <th className="p-4 text-left">Aksi</th>
