@@ -104,14 +104,14 @@ export default function GuidePage() {
 
       {/* CTA Akhir */}
       <div className="mt-16 text-center">
-        <div className="inline-block bg-emerald-50 border border-emerald-200 rounded-2xl p-6">
-          <h3 className="text-xl font-bold text-emerald-800 mb-2">Kamu Sudah Siap!</h3>
-          <p className="text-emerald-700 mb-4">
+        <div className="inline-block bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-2xl p-6">
+          <h3 className="text-xl font-bold text-pink-800 mb-2">Kamu Sudah Siap!</h3>
+          <p className="text-pink-700 mb-4">
             Tidak perlu jadi akuntan. Cukup jadi dirimu yang jago bikin produk! 💖
           </p>
           <Link
             href="/erp/dashboard"
-            className="inline-block bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:opacity-90"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
           >
             📊 Lihat Dashboard Sekarang
           </Link>
