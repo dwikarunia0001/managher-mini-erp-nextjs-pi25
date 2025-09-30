@@ -6,16 +6,25 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
   const [formData, setFormData] = useState(() => {
     const initial = {};
     fields.forEach(field => {
-      initial[field.name] = initialValues?.[field.name] ?? field.defaultValue ?? '';
+      initial[field.name] = initialValues?.[field.name] ?? field.defaultValue ?? (field.type === 'file' ? null : '');
     });
     return initial;
   });
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, type } = e.target;
+    let value = e.target.value;
+
+    if (type === 'file') {
+      // Ambil file pertama dari input
+      value = e.target.files[0] || null;
+    } else if (type === 'number') {
+      value = value === '' ? '' : Number(value);
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' ? (value === '' ? '' : Number(value)) : value
+      [name]: value
     }));
   };
 
@@ -27,12 +36,12 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
   const handleReset = () => {
     const resetData = {};
     fields.forEach(field => {
-      resetData[field.name] = field.defaultValue ?? '';
+      resetData[field.name] = field.type === 'file' ? null : (field.defaultValue ?? '');
     });
     setFormData(resetData);
   };
 
-  // Warna berdasarkan indeks (hardcoded untuk Tailwind CDN)
+  // Warna berdasarkan indeks
   const getColorClasses = (index) => {
     const styles = {
       0: { border: 'border-l-4 border-pink-500', bg: 'bg-pink-100', text: 'text-pink-600', ring: 'focus:ring-pink-300' },
@@ -47,14 +56,13 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
     return styles[index % 8];
   };
 
-  // Panduan untuk pemula (opsional, bisa dikustom per field)
   const getHelperText = (fieldName) => {
     const guides = {
       name: '🌸 Gunakan nama yang mudah diingat & jelas. Contoh: "Baju Kaos Katun"',
       price: '💰 Jangan takut hargai usahamu! Harga = biaya + keuntungan kecil.',
       category: '🏷️ Contoh: Pakaian, Aksesoris, Makanan, dll.',
       stock: '📦 Stok 0 = habis. Bisa diisi nanti setelah produksi.',
-      image: '📸 Bisa pakai foto dari HP! URL harus diawali https://',
+      image: '📸 Upload foto produk (maks 200 KB, format JPG/PNG).',
       description: '💬 Ceritakan singkat tentang produk ini. Apa yang membuatnya spesial?',
       notes: '📝 Catatan opsional: bahan, ukuran, atau info khusus.',
       quantity: '🔢 Jumlah barang yang dibeli/dibuat.',
@@ -67,7 +75,6 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl shadow-xl">
         <div className="bg-white">
-          {/* Header */}
           <div className="flex items-center justify-between p-6 border-b">
             <h3 className="text-xl font-semibold">📝 {title}</h3>
             <div className="flex gap-2">
@@ -95,11 +102,10 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
             </div>
           </div>
 
-          {/* Konten Form */}
           <div className="max-h-[80vh] overflow-y-auto p-6 pb-10">
             <form id="modal-form" onSubmit={handleSubmit} className="space-y-5">
               {fields.map((field, index) => {
-                const classes = getColorClasses(index); // ✅ gunakan index langsung
+                const classes = getColorClasses(index);
                 const value = formData[field.name] ?? '';
 
                 return (
@@ -110,6 +116,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                       </div>
                       <label className="text-sm font-medium">{field.label}</label>
                     </div>
+
                     {field.type === 'select' ? (
                       <select
                         name={field.name}
@@ -133,6 +140,14 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
                         required={field.required}
                       />
+                    ) : field.type === 'file' ? (
+                      <input
+                        type="file"
+                        name={field.name}
+                        accept="image/*"
+                        onChange={handleChange}
+                        className={`w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100`}
+                      />
                     ) : (
                       <input
                         type={field.type}
@@ -146,6 +161,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         required={field.required}
                       />
                     )}
+
                     {getHelperText(field.name) && (
                       <p className="mt-1 text-xs text-slate-500">
                         {getHelperText(field.name)}

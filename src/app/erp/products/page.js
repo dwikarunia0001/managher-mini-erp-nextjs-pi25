@@ -99,14 +99,33 @@ export default function ProductsPage() {
   }, []);
 
   const handleSubmit = async (data) => {
+    let imageUrl = '';
+
+    // Handle upload gambar
+    if (data.image instanceof File) {
+      // ✅ Batasi ukuran file (200 KB = 200 * 1024 bytes)
+      if (data.image.size > 200 * 1024) {
+        alert('Ukuran gambar terlalu besar! Maksimal 200 KB.');
+        return;
+      }
+
+      // ✅ Kompres gambar ke ukuran maks 800px lebar
+      const compressedFile = await compressImage(data.image, 800, 0.8);
+      imageUrl = await fileToBase64(compressedFile);
+    } else if (editing && !data.image) {
+      imageUrl = editing.image || '';
+    } else {
+      imageUrl = data.image || '';
+    }
+
     const payload = {
       ...data,
+      image: imageUrl,
       price: Number(data.price) || 0,
       materialCost: Number(data.materialCost) || 0,
       otherCost: Number(data.otherCost) || 0,
       stock: data.stock !== '' ? Number(data.stock) : undefined,
     };
-    if (!payload.image) delete payload.image;
 
     try {
       if (editing) {
@@ -118,12 +137,39 @@ export default function ProductsPage() {
       setEditing(null);
     } catch (err) {
       console.error('Gagal menyimpan produk:', err);
+      alert('Gagal menyimpan produk. Coba gambar lebih kecil.');
     }
   };
 
   const handleImageError = (e) => {
     e.target.src = 'https://via.placeholder.com/60/e2e8f0/8b5cf6?text=No+Image';
   };
+
+  // Kompres gambar ke ukuran maks lebar & kualitas tertentu
+  function compressImage(file, maxWidth, quality = 0.8) {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const ratio = Math.min(maxWidth / img.width, 1);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      };
+    });
+  }
+
+// Konversi File ke Base64
+function fileToBase64(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
 
   const categories = useMemo(() => {
     const cats = new Set(products.map(p => p.category).filter(Boolean));
@@ -198,7 +244,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6">
+    <div className="max-w-[970px] mx-auto px-4 lg:px-6 py-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
@@ -268,7 +314,8 @@ export default function ProductsPage() {
                 <th className="p-4 text-left">Gambar</th>
                 <th className="p-4 text-left">Nama</th>
                 <th className="p-4 text-left whitespace-nowrap">Harga Jual</th>
-                <th className="p-4 text-left whitespace-nowrap">Biaya Total</th>
+                <th className="p-4 text-left whitespace-nowrap">Biaya Bahan</th>
+                <th className="p-4 text-left whitespace-nowrap">Biaya Lain-lain</th>
                 <th className="p-4 text-left">L/R per Unit</th>
                 <th className="p-4 text-left">Kategori</th>
                 <th className="p-4 text-left">Stok</th>
@@ -278,7 +325,7 @@ export default function ProductsPage() {
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="p-12 text-center text-slate-500">
+                  <td colSpan="10" className="p-12 text-center text-slate-500">
                     <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-3">
                       <span className="text-pink-500 text-lg">📦</span>
                     </div>
@@ -288,7 +335,6 @@ export default function ProductsPage() {
               ) : (
                 filteredProducts.map((p, index) => {
                   const profit = getProfitPerUnit(p);
-                  const totalCost = (p.materialCost || 0) + (p.otherCost || 0);
                   return (
                     <tr key={p.id} className="hover:bg-pink-50 transition-colors">
                       <td className="p-4 text-slate-500 text-center font-medium whitespace-nowrap">{index + 1}</td>
@@ -306,9 +352,10 @@ export default function ProductsPage() {
                           </div>
                         )}
                       </td>
-                      <td className="p-4 font-medium text-slate-800 max-w-xs break-words">{p.name}</td>
+                      <td className="p-4 font-medium text-slate-800 max-w-xs whitespace-nowrap">{p.name}</td>
                       <td className="p-4 text-pink-600 font-medium whitespace-nowrap">Rp {Number(p.price).toLocaleString()}</td>
-                      <td className="p-4 text-slate-700 whitespace-nowrap">Rp {totalCost.toLocaleString()}</td>
+                      <td className="p-4 text-slate-700 whitespace-nowrap">Rp {Number(p.materialCost).toLocaleString()}</td>
+                      <td className="p-4 text-slate-700 whitespace-nowrap">Rp {Number(p.otherCost).toLocaleString()}</td>
                       <td className={`p-4 font-medium whitespace-nowrap ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                       </td>
@@ -425,7 +472,7 @@ export default function ProductsPage() {
             { name: 'otherCost', label: 'Biaya Lain-lain (Rp)', type: 'number', min: 0 },
             { name: 'category', label: 'Kategori', type: 'text' },
             { name: 'stock', label: 'Stok (opsional)', type: 'number', min: 0 },
-            { name: 'image', label: 'URL Gambar (opsional)', type: 'text' },
+            { name: 'image', label: 'Upload Gambar (opsional)', type: 'file' },
           ]}
           initialValues={editing || {}}
           onSubmit={handleSubmit}
