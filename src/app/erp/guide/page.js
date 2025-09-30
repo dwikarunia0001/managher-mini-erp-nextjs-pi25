@@ -113,7 +113,7 @@ export default function GuidePage() {
             href="/erp/dashboard"
             className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
           >
-            📊 Lihat Dashboard Sekarang
+            ✨ Mulai Buat Produkmu Sekarang
           </Link>
         </div>
       </div>

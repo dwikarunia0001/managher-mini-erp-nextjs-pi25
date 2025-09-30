@@ -101,15 +101,11 @@ export default function ProductsPage() {
   const handleSubmit = async (data) => {
     let imageUrl = '';
 
-    // Handle upload gambar
     if (data.image instanceof File) {
-      // ✅ Batasi ukuran file (200 KB = 200 * 1024 bytes)
       if (data.image.size > 200 * 1024) {
         alert('Ukuran gambar terlalu besar! Maksimal 200 KB.');
         return;
       }
-
-      // ✅ Kompres gambar ke ukuran maks 800px lebar
       const compressedFile = await compressImage(data.image, 800, 0.8);
       imageUrl = await fileToBase64(compressedFile);
     } else if (editing && !data.image) {
@@ -145,7 +141,6 @@ export default function ProductsPage() {
     e.target.src = 'https://via.placeholder.com/60/e2e8f0/8b5cf6?text=No+Image';
   };
 
-  // Kompres gambar ke ukuran maks lebar & kualitas tertentu
   function compressImage(file, maxWidth, quality = 0.8) {
     return new Promise((resolve) => {
       const canvas = document.createElement('canvas');
@@ -162,14 +157,13 @@ export default function ProductsPage() {
     });
   }
 
-// Konversi File ke Base64
-function fileToBase64(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target.result);
-    reader.readAsDataURL(file);
-  });
-}
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  }
 
   const categories = useMemo(() => {
     const cats = new Set(products.map(p => p.category).filter(Boolean));
@@ -237,7 +231,7 @@ function fileToBase64(file) {
       }
       setIsImportModalOpen(false);
       setImportPreview([]);
-      fetchProducts(); // refresh
+      fetchProducts();
     } catch (err) {
       setImportError('Gagal menyimpan data. Coba lagi.');
     }
@@ -307,10 +301,10 @@ function fileToBase64(file) {
       {/* Desktop: Tabel */}
       <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-max text-sm">
             <thead className="bg-pink-50 text-pink-700">
               <tr>
-                <th className="p-4 text-left w-12">#</th>
+                <th className="p-4 text-left">#</th>
                 <th className="p-4 text-left">Gambar</th>
                 <th className="p-4 text-left">Nama</th>
                 <th className="p-4 text-left whitespace-nowrap">Harga Jual</th>
@@ -336,9 +330,9 @@ function fileToBase64(file) {
                 filteredProducts.map((p, index) => {
                   const profit = getProfitPerUnit(p);
                   return (
-                    <tr key={p.id} className="hover:bg-pink-50 transition-colors">
-                      <td className="p-4 text-slate-500 text-center font-medium whitespace-nowrap">{index + 1}</td>
-                      <td className="p-4 w-16 whitespace-nowrap">
+                    <tr key={p.id} className="hover:bg-pink-50">
+                      <td className="p-4 text-slate-500 font-medium">{index + 1}</td>
+                      <td className="p-4 w-16">
                         {p.image ? (
                           <img
                             src={p.image}
@@ -352,16 +346,16 @@ function fileToBase64(file) {
                           </div>
                         )}
                       </td>
-                      <td className="p-4 font-medium text-slate-800 max-w-xs whitespace-nowrap">{p.name}</td>
-                      <td className="p-4 text-pink-600 font-medium whitespace-nowrap">Rp {Number(p.price).toLocaleString()}</td>
-                      <td className="p-4 text-slate-700 whitespace-nowrap">Rp {Number(p.materialCost).toLocaleString()}</td>
-                      <td className="p-4 text-slate-700 whitespace-nowrap">Rp {Number(p.otherCost).toLocaleString()}</td>
-                      <td className={`p-4 font-medium whitespace-nowrap ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <td className="p-4 font-medium text-slate-800 max-w-xs break-words">{p.name}</td>
+                      <td className="p-4 text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</td>
+                      <td className="p-4 text-slate-700">Rp {Number(p.materialCost).toLocaleString()}</td>
+                      <td className="p-4 text-slate-700">Rp {Number(p.otherCost).toLocaleString()}</td>
+                      <td className={`p-4 font-medium ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                       </td>
-                      <td className="p-4 text-slate-700 whitespace-nowrap">{p.category || '—'}</td>
-                      <td className="p-4 whitespace-nowrap">{getStockBadge(p.stock)}</td>
-                      <td className="p-4 text-right space-x-3 whitespace-nowrap">
+                      <td className="p-4 text-slate-700">{p.category || '—'}</td>
+                      <td className="p-4">{getStockBadge(p.stock)}</td>
+                      <td className="p-4 text-right space-x-3">
                         <button
                           onClick={() => {
                             setEditing(p);
@@ -387,7 +381,7 @@ function fileToBase64(file) {
         </div>
       </div>
 
-      {/* Mobile: Card List */}
+      {/* Mobile: Card List — SESUAI POLA ORDERS */}
       <div className="md:hidden space-y-4">
         {filteredProducts.length === 0 ? (
           <div className="bg-white rounded-xl p-6 text-center text-slate-500 border border-slate-200">
@@ -397,63 +391,68 @@ function fileToBase64(file) {
             <p>Tidak ada produk yang cocok.</p>
           </div>
         ) : (
-          filteredProducts.map((p, index) => {
+          filteredProducts.map((p) => {
             const profit = getProfitPerUnit(p);
             return (
               <div key={p.id} className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="flex gap-3">
-                  <div className="w-16 flex-shrink-0">
-                    {p.image ? (
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Nama</span>
+                    <span className="font-medium text-slate-800">{p.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Harga Jual</span>
+                    <span className="text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Biaya Bahan</span>
+                    <span>Rp {Number(p.materialCost).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Biaya Lain-lain</span>
+                    <span>Rp {Number(p.otherCost).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Laba/Unit</span>
+                    <span className={profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                      Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 text-sm">Kategori</span>
+                    <span>{p.category || '—'}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm">Stok</span>
+                    {getStockBadge(p.stock)}
+                  </div>
+                  {p.image && (
+                    <div className="pt-2">
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+                        className="w-full h-32 object-contain rounded-lg border border-slate-200"
                         onError={handleImageError}
                       />
-                    ) : (
-                      <div className="w-16 h-16 bg-slate-100 rounded-lg border flex items-center justify-center text-slate-400 text-xs">
-                        —
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-medium text-slate-800 truncate">{p.name}</h3>
-                      <span className="text-xs text-slate-500 ml-2">#{index + 1}</span>
                     </div>
-                    <p className="text-pink-600 font-medium mt-1">Jual: Rp {Number(p.price).toLocaleString()}</p>
-                    <div className="text-sm text-slate-600 space-y-1 mt-2">
-                      <div>Biaya Bahan: Rp {Number(p.materialCost).toLocaleString()}</div>
-                      <div>Biaya Lain: Rp {Number(p.otherCost).toLocaleString()}</div>
-                      <div>
-                        <span className="font-medium">Laba/Unit:</span>{' '}
-                        <span className={profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
-                          Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
-                        </span>
-                      </div>
-                      <div><span className="font-medium">Kategori:</span> {p.category || '—'}</div>
-                      <div>
-                        <span className="font-medium">Stok:</span> {getStockBadge(p.stock)}
-                      </div>
-                    </div>
-                    <div className="mt-3 flex justify-end space-x-2">
-                      <button
-                        onClick={() => {
-                          setEditing(p);
-                          setIsModalOpen(true);
-                        }}
-                        className="px-2.5 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => deleteProduct(p.id)}
-                        className="px-2.5 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700"
-                      >
-                        Hapus
-                      </button>
-                    </div>
-                  </div>
+                  )}
+                </div>
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    onClick={() => {
+                      setEditing(p);
+                      setIsModalOpen(true);
+                    }}
+                    className="px-2.5 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteProduct(p.id)}
+                    className="px-2.5 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700"
+                  >
+                    Hapus
+                  </button>
                 </div>
               </div>
             );
@@ -518,10 +517,13 @@ function fileToBase64(file) {
                     Pilih File CSV
                   </button>
                   <p className="text-xs text-slate-500 mt-2">
-                    Contoh format tersedia di <button
+                    Contoh format tersedia di{' '}
+                    <button
                       onClick={() => exportToCSV([])}
                       className="text-pink-600 underline"
-                    >template kosong</button>
+                    >
+                      template kosong
+                    </button>
                   </p>
                 </div>
               )}
