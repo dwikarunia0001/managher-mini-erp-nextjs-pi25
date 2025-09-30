@@ -53,7 +53,7 @@ export default function GuidePage() {
           },
           {
             step: 4,
-            title: "Lihat Laba Bersih di Dashboard",
+            title: "Lihat Laba / Rugi di Dashboard",
             desc: "Semua data otomatis terhitung: pendapatan, pengeluaran, dan laba/rugi.",
             example: "Contoh:\n• Total pendapatan: Rp 75.000\n• Total biaya produksi: Rp 45.000\n• Laba bersih: Rp 30.000 💰",
             color: "purple",

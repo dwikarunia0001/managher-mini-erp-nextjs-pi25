@@ -23,7 +23,7 @@ export default function HomePage() {
         </p>
 
         <Link
-          href="/erp/guide"
+          href="/erp/dashboard"
           className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
         >
           ✨ Mulai Gratis Sekarang
@@ -63,8 +63,8 @@ export default function HomePage() {
             Gratis. Tidak perlu kartu kredit. Bisa pakai HP.
           </p>
           <Link
-            href="/erp/guide"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium rounded-lg shadow-md hover:opacity-90"
+            href="/erp/dashboard"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
           >
             ✨ Mulai Bisnismu Sekarang
           </Link>
