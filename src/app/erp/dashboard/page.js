@@ -159,7 +159,7 @@ function AlertCard({ title, icon, color, items, message, actionLink }) {
           )}
           <Link
             href={actionLink}
-            className="mt-4 inline-block text-sm font-semibold text-purple-600 hover:text-purple-800 underline"
+            className="mt-4 inline-block text-sm px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-200 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
           >
             Lihat →
           </Link>
