@@ -93,7 +93,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <p className="text-2xl text-slate-800">
-              {isProfit ? '✅ Untung' : '❌ Rugi'}
+              {isProfit ? '🌟 Untung' : '⚠️ Rugi'}
             </p>
           </div>
           <div className="flex items-baseline gap-2">

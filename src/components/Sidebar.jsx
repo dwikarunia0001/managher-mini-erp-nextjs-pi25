@@ -48,8 +48,8 @@ export default function Sidebar() {
             MH
           </div>
           <div>
-            <div className="font-semibold">ManagHer ERP</div>
-            <div className="text-xs text-slate-500">Solopreneur Tools</div>
+            <div className="font-semibold">ManagHer Mini ERP</div>
+            <div className="text-xs text-slate-500">Solopreneur Reporting</div>
           </div>
         </div>
 
@@ -116,6 +116,15 @@ export default function Sidebar() {
                   onClick={closeMobile}
                 >
                   🛒 Order
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/erp/profit-loss"
+                  className={`flex items-center gap-3 p-2 rounded-lg ${isActive('/orders') ? 'bg-pink-50 text-pink-700' : 'hover:bg-slate-100'}`}
+                  onClick={closeMobile}
+                >
+                  📈 Laporan Laba Rugi
                 </Link>
               </li>
             </ul>

@@ -407,7 +407,7 @@ function fileToBase64(file) {
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="w-16 h-16 object-cover rounded-lg border"
+                        className="w-16 h-16 object-cover rounded-lg border border-slate-200"
                         onError={handleImageError}
                       />
                     ) : (
