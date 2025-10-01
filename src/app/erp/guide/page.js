@@ -4,25 +4,25 @@ import Link from 'next/link';
 
 export default function GuidePage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-3 py-6 text-xs">
       {/* Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-slate-800 mb-4">✨ Panduan Memulai</h1>
+      <div className="text-center mb-8">
+        <h1 className="text-xl font-bold text-slate-800 mb-2">✨ Panduan Memulai</h1>
         <p className="text-slate-600 max-w-2xl mx-auto">
           Ikuti 5 langkah sederhana ini untuk mulai kelola bisnismu dengan ManagHer Mini ERP.
         </p>
       </div>
 
       {/* Studi Kasus */}
-      <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-2xl p-6 mb-12 text-center">
-        <p className="text-pink-700 italic text-lg max-w-2xl mx-auto">
+      <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-xl p-4 mb-8 text-center">
+        <p className="text-pink-700 italic max-w-2xl mx-auto">
           “Aku bisa bikin brownies enak banget, tapi gak tahu cara catat untung-ruginya. Takut rugi, tapi pengin coba jualan.”
         </p>
-        <p className="font-medium mt-2 text-slate-800">— Ibu Rina, Bandung</p>
+        <p className="font-medium mt-1 text-slate-800">— Ibu Rina, Bandung</p>
       </div>
 
       {/* Langkah-Langkah dalam Card Warna-Warni */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {[
           {
             step: 1,
@@ -72,7 +72,7 @@ export default function GuidePage() {
         ].map((step, idx) => (
           <div
             key={idx}
-            className={`rounded-2xl p-6 shadow-sm border ${
+            className={`rounded-xl p-4 shadow-sm border ${
               step.color === 'pink' ? 'bg-pink-50 border-pink-200' :
               step.color === 'blue' ? 'bg-blue-50 border-blue-200' :
               step.color === 'green' ? 'bg-green-50 border-green-200' :
@@ -80,20 +80,20 @@ export default function GuidePage() {
               'bg-amber-50 border-amber-200'
             }`}
           >
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                 step.color === 'pink' ? 'bg-pink-100 text-pink-700' :
                 step.color === 'blue' ? 'bg-blue-100 text-blue-700' :
                 step.color === 'green' ? 'bg-green-100 text-green-700' :
                 step.color === 'purple' ? 'bg-purple-100 text-purple-700' :
                 'bg-amber-100 text-amber-700'
               }`}>
-                <span className="font-bold text-lg">{step.step}</span>
+                <span className="font-bold text-[11px]">{step.step}</span>
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h2>
-                <p className="text-slate-600 mb-4">{step.desc}</p>
-                <pre className="bg-white p-4 rounded-lg text-sm text-slate-700 whitespace-pre-wrap mb-4 border border-slate-200">
+                <h2 className="font-bold text-slate-800 mb-1">{step.title}</h2>
+                <p className="text-slate-600 mb-2">{step.desc}</p>
+                <pre className="bg-white p-3 rounded border border-slate-200 text-[11px] text-slate-700 whitespace-pre-wrap mb-2">
                   {step.example}
                 </pre>
                 <Link
@@ -115,15 +115,15 @@ export default function GuidePage() {
       </div>
 
       {/* CTA Akhir */}
-      <div className="mt-16 text-center">
-        <div className="inline-block bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-2xl p-6">
-          <h3 className="text-xl font-bold text-pink-800 mb-2">Kamu Sudah Siap!</h3>
-          <p className="text-pink-700 mb-4">
+      <div className="mt-10 text-center">
+        <div className="inline-block bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-xl p-4">
+          <h3 className="font-bold text-pink-800 mb-1">Kamu Sudah Siap!</h3>
+          <p className="text-pink-700 mb-2">
             Tidak perlu jadi akuntan. Cukup jadi dirimu yang jago bikin produk! 💖
           </p>
           <Link
             href="/erp/products"
-            className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
+            className="inline-block px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-lg shadow hover:shadow-md transition-transform transform hover:-translate-y-0.5 text-[11px]"
           >
             ✨ Mulai Buat Produkmu Sekarang
           </Link>

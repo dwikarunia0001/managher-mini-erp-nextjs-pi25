@@ -16,7 +16,6 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
     let value = e.target.value;
 
     if (type === 'file') {
-      // Ambil file pertama dari input
       value = e.target.files[0] || null;
     } else if (type === 'number') {
       value = value === '' ? '' : Number(value);
@@ -44,14 +43,14 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
   // Warna berdasarkan indeks
   const getColorClasses = (index) => {
     const styles = {
-      0: { border: 'border-l-4 border-pink-500', bg: 'bg-pink-100', text: 'text-pink-600', ring: 'focus:ring-pink-300' },
-      1: { border: 'border-l-4 border-blue-500', bg: 'bg-blue-100', text: 'text-blue-600', ring: 'focus:ring-blue-300' },
-      2: { border: 'border-l-4 border-green-500', bg: 'bg-green-100', text: 'text-green-600', ring: 'focus:ring-green-300' },
-      3: { border: 'border-l-4 border-purple-500', bg: 'bg-purple-100', text: 'text-purple-600', ring: 'focus:ring-purple-300' },
-      4: { border: 'border-l-4 border-orange-500', bg: 'bg-orange-100', text: 'text-orange-600', ring: 'focus:ring-orange-300' },
-      5: { border: 'border-l-4 border-amber-500', bg: 'bg-amber-100', text: 'text-amber-600', ring: 'focus:ring-amber-300' },
-      6: { border: 'border-l-4 border-rose-500', bg: 'bg-rose-100', text: 'text-rose-600', ring: 'focus:ring-rose-300' },
-      7: { border: 'border-l-4 border-indigo-500', bg: 'bg-indigo-100', text: 'text-indigo-600', ring: 'focus:ring-indigo-300' },
+      0: { border: 'border-l-3 border-pink-500', bg: 'bg-pink-100', text: 'text-pink-600', ring: 'focus:ring-pink-200' },
+      1: { border: 'border-l-3 border-blue-500', bg: 'bg-blue-100', text: 'text-blue-600', ring: 'focus:ring-blue-200' },
+      2: { border: 'border-l-3 border-green-500', bg: 'bg-green-100', text: 'text-green-600', ring: 'focus:ring-green-200' },
+      3: { border: 'border-l-3 border-purple-500', bg: 'bg-purple-100', text: 'text-purple-600', ring: 'focus:ring-purple-200' },
+      4: { border: 'border-l-3 border-orange-500', bg: 'bg-orange-100', text: 'text-orange-600', ring: 'focus:ring-orange-200' },
+      5: { border: 'border-l-3 border-amber-500', bg: 'bg-amber-100', text: 'text-amber-600', ring: 'focus:ring-amber-200' },
+      6: { border: 'border-l-3 border-rose-500', bg: 'bg-rose-100', text: 'text-rose-600', ring: 'focus:ring-rose-200' },
+      7: { border: 'border-l-3 border-indigo-500', bg: 'bg-indigo-100', text: 'text-indigo-600', ring: 'focus:ring-indigo-200' },
     };
     return styles[index % 8];
   };
@@ -72,49 +71,49 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl shadow-xl">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-2 backdrop-blur-sm">
+      <div className="relative w-full max-w-xl max-h-[90vh] overflow-hidden rounded-xl shadow-lg">
         <div className="bg-white">
-          <div className="flex items-center justify-between p-6 border-b">
-            <h3 className="text-xl font-semibold">📝 {title}</h3>
-            <div className="flex gap-2">
+          <div className="flex items-center justify-between p-3 border-b">
+            <h3 className="font-semibold text-slate-800">📝 {title}</h3>
+            <div className="flex gap-1.5">
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-3 py-1.5 text-sm rounded-lg bg-slate-200 hover:bg-slate-300 transition"
+                className="px-2 py-1 text-[11px] rounded bg-slate-200 hover:bg-slate-300 transition text-xs"
               >
                 🔄 Reset
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-1.5 text-sm rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 transition"
+                className="px-2 py-1 text-[11px] rounded bg-blue-100 hover:bg-blue-200 text-blue-700 transition text-xs"
               >
                 ✏️ Batal
               </button>
               <button
                 type="submit"
                 form="modal-form"
-                className="px-3 py-1.5 text-sm rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white transition"
+                className="px-2 py-1 text-[11px] rounded bg-gradient-to-r from-pink-500 to-purple-500 text-white transition text-xs"
               >
                 💾 Simpan
               </button>
             </div>
           </div>
 
-          <div className="max-h-[80vh] overflow-y-auto p-6 pb-30">
-            <form id="modal-form" onSubmit={handleSubmit} className="space-y-5">
+          <div className="max-h-[70vh] overflow-y-auto p-4 pb-15 text-xs">
+            <form id="modal-form" onSubmit={handleSubmit} className="space-y-3">
               {fields.map((field, index) => {
                 const classes = getColorClasses(index);
                 const value = formData[field.name] ?? '';
 
                 return (
-                  <div key={field.name} className={`${classes.border} pl-4`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className={`w-6 h-6 rounded-full ${classes.bg} ${classes.text} flex items-center justify-center text-xs font-bold`}>
+                  <div key={field.name} className={`${classes.border} pl-3`}>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <div className={`w-5 h-5 rounded-full ${classes.bg} ${classes.text} flex items-center justify-center text-[10px] font-bold`}>
                         {index + 1}
                       </div>
-                      <label className="text-sm font-medium">{field.label}</label>
+                      <label className="font-medium">{field.label}</label>
                     </div>
 
                     {field.type === 'select' ? (
@@ -122,7 +121,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         name={field.name}
                         value={value}
                         onChange={handleChange}
-                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full px-2 py-1.5 border rounded outline-none ${classes.ring} transition text-xs`}
                         required={field.required}
                       >
                         <option value="">Pilih...</option>
@@ -135,9 +134,9 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         name={field.name}
                         value={value}
                         onChange={handleChange}
-                        rows={field.rows || 3}
+                        rows={field.rows || 2}
                         placeholder={field.placeholder}
-                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full px-2 py-1.5 border rounded outline-none ${classes.ring} transition text-xs`}
                         required={field.required}
                       />
                     ) : field.type === 'file' ? (
@@ -146,7 +145,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         name={field.name}
                         accept="image/*"
                         onChange={handleChange}
-                        className={`w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100`}
+                        className={`w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[11px] file:font-medium file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100`}
                       />
                     ) : (
                       <input
@@ -157,13 +156,13 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
                         min={field.min}
                         max={field.max}
                         placeholder={field.placeholder}
-                        className={`w-full p-2 border rounded-lg outline-none ${classes.ring} transition`}
+                        className={`w-full px-2 py-1.5 border rounded outline-none ${classes.ring} transition text-xs`}
                         required={field.required}
                       />
                     )}
 
                     {getHelperText(field.name) && (
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-0.5 text-[10px] text-slate-500">
                         {getHelperText(field.name)}
                       </p>
                     )}

@@ -203,9 +203,9 @@ export default function OrdersPage() {
 
   if (products.length === 0 || customers.length === 0) {
     return (
-      <div className="max-w-3xl mx-auto px-4">
-        <h1 className="text-2xl font-bold text-slate-800 mb-6">🛒 Order</h1>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+      <div className="max-w-3xl mx-auto px-3 py-4 text-xs">
+        <h1 className="text-xl font-bold text-slate-800 mb-4">🛒 Order</h1>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-yellow-800">
             Tambahkan minimal <strong>1 produk</strong> dan <strong>1 customer</strong> terlebih dahulu.
           </p>
@@ -215,29 +215,29 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="max-w-[970px] mx-auto px-4 lg:px-6 py-6">
+    <div className="max-w-[970px] mx-auto px-3 lg:px-4 py-4 text-xs">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">🛒 Order</h1>
-          <p className="text-slate-600 text-sm mt-1">Kelola pesanan dan pantau laba per transaksi.</p>
+          <h1 className="text-xl font-bold text-slate-800">🛒 Order</h1>
+          <p className="text-slate-600 mt-0.5">Kelola pesanan dan pantau laba per transaksi.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             onClick={() => exportToCSV(orders, products, customers)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
+            className="px-2.5 py-1 text-[11px] font-medium rounded bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
           >
             📤 Export CSV
           </button>
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 shadow-sm"
+            className="px-2.5 py-1 text-[11px] font-medium rounded bg-emerald-100 text-emerald-700 hover:bg-emerald-200 shadow-sm"
           >
             📥 Import CSV
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-5 py-2.5 text-sm font-medium rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-sm hover:shadow-md transition-shadow"
+            className="px-3 py-1 text-[11px] font-medium rounded bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-sm hover:shadow"
           >
             + Buat Order
           </button>
@@ -245,18 +245,18 @@ export default function OrdersPage() {
       </div>
 
       {/* Controls */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
         <input
           type="text"
           placeholder="Cari produk atau pelanggan..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         >
           <option value="all">Semua Status</option>
           <option value="Menunggu">Menunggu</option>
@@ -267,7 +267,7 @@ export default function OrdersPage() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         >
           <option value="date">Sortir: Tanggal Terbaru</option>
           <option value="total">Sortir: Total</option>
@@ -276,28 +276,28 @@ export default function OrdersPage() {
       </div>
 
       {/* Desktop: Tabel */}
-      <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-max text-sm">
+          <table className="w-full min-w-max">
             <thead className="bg-pink-50 text-pink-700">
               <tr>
-                <th className="p-4 text-left whitespace-nowrap">Tanggal</th>
-                <th className="p-4 text-left whitespace-nowrap">Produk</th>
-                <th className="p-4 text-left whitespace-nowrap">Pelanggan</th>
-                <th className="p-4 text-left whitespace-nowrap">Qty</th>
-                <th className="p-4 text-left whitespace-nowrap">Total</th>
-                <th className="p-4 text-left whitespace-nowrap">L/R per Unit</th>
-                <th className="p-4 text-left whitespace-nowrap">Status</th>
-                <th className="p-4 text-left whitespace-nowrap">Catatan</th>
-                <th className="p-4 text-left whitespace-nowrap">Aksi</th>
+                <th className="p-2 text-left whitespace-nowrap">Tanggal</th>
+                <th className="p-2 text-left whitespace-nowrap">Produk</th>
+                <th className="p-2 text-left whitespace-nowrap">Pelanggan</th>
+                <th className="p-2 text-left whitespace-nowrap">Qty</th>
+                <th className="p-2 text-left whitespace-nowrap">Total</th>
+                <th className="p-2 text-left whitespace-nowrap">L/R per Unit</th>
+                <th className="p-2 text-left whitespace-nowrap">Status</th>
+                <th className="p-2 text-left whitespace-nowrap">Catatan</th>
+                <th className="p-2 text-center whitespace-nowrap">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {filteredOrders.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="p-12 text-center text-slate-500">
-                    <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-3">
-                      <span className="text-pink-500 text-lg">🛒</span>
+                  <td colSpan="9" className="p-6 text-center text-slate-500">
+                    <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-1.5">
+                      <span className="text-pink-500 text-sm">🛒</span>
                     </div>
                     Tidak ada order yang cocok.
                   </td>
@@ -307,35 +307,35 @@ export default function OrdersPage() {
                   const profit = getProfit(o);
                   return (
                     <tr key={o.id} className="hover:bg-pink-50">
-                      <td className="p-4 whitespace-nowrap">{formatDate(o.date)}</td>
-                      <td className="p-4 font-medium whitespace-nowrap max-w-xs break-words">{getProductName(o.productId)}</td>
-                      <td className="p-4 whitespace-nowrap max-w-xs break-words">{getCustomerName(o.customerId)}</td>
-                      <td className="p-4 text-center whitespace-nowrap">{o.quantity}</td>
-                      <td className="p-4 text-pink-600 font-medium whitespace-nowrap">Rp {o.total.toLocaleString()}</td>
-                      <td className={`p-4 font-medium whitespace-nowrap ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <td className="p-2 whitespace-nowrap">{formatDate(o.date)}</td>
+                      <td className="p-2 font-medium whitespace-nowrap max-w-xs break-words">{getProductName(o.productId)}</td>
+                      <td className="p-2 whitespace-nowrap max-w-xs break-words">{getCustomerName(o.customerId)}</td>
+                      <td className="p-2 text-center whitespace-nowrap">{o.quantity}</td>
+                      <td className="p-2 text-pink-600 font-medium whitespace-nowrap">Rp {o.total.toLocaleString()}</td>
+                      <td className={`p-2 font-medium whitespace-nowrap ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                       </td>
-                      <td className="p-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor(o.status)}`}>
+                      <td className="p-2 whitespace-nowrap">
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium ${statusColor(o.status)}`}>
                           {o.status}
                         </span>
                       </td>
-                      <td className="p-4 text-slate-700 min-w-[150px] max-w-xs break-words">
+                      <td className="p-2 text-slate-700 min-w-[120px] max-w-xs break-words text-[11px]">
                         {o.notes || '—'}
                       </td>
-                      <td className="p-4 text-right space-x-3 whitespace-nowrap">
+                      <td className="p-2 text-center space-x-1 whitespace-nowrap">
                         <button
                           onClick={() => {
                             setEditingOrder(o);
                             setIsModalOpen(true);
                           }}
-                          className="px-3 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
+                          className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => deleteOrder(o.id)}
-                          className="px-3 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700 hover:bg-rose-200"
+                          className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-rose-100 text-rose-700 hover:bg-rose-200"
                         >
                           Batalkan
                         </button>
@@ -350,11 +350,11 @@ export default function OrdersPage() {
       </div>
 
       {/* Mobile: Card List */}
-      <div className="md:hidden space-y-4">
+      <div className="md:hidden space-y-2">
         {filteredOrders.length === 0 ? (
-          <div className="bg-white rounded-xl p-6 text-center text-slate-500 border border-slate-200">
-            <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-3">
-              <span className="text-pink-500 text-lg">🛒</span>
+          <div className="bg-white rounded-lg p-4 text-center text-slate-500 border border-slate-200">
+            <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-1.5">
+              <span className="text-pink-500 text-sm">🛒</span>
             </div>
             <p>Tidak ada order yang cocok.</p>
           </div>
@@ -362,44 +362,44 @@ export default function OrdersPage() {
           filteredOrders.map((o) => {
             const profit = getProfit(o);
             return (
-              <div key={o.id} className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="space-y-2">
+              <div key={o.id} className="bg-white rounded-lg p-3 border border-slate-200">
+                <div className="space-y-1">
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Tanggal</span>
+                    <span className="text-slate-500">Tanggal</span>
                     <span className="text-slate-800">{formatDate(o.date)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Produk</span>
+                    <span className="text-slate-500">Produk</span>
                     <span className="font-medium">{getProductName(o.productId)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Pelanggan</span>
+                    <span className="text-slate-500">Pelanggan</span>
                     <span>{getCustomerName(o.customerId)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Qty</span>
+                    <span className="text-slate-500">Qty</span>
                     <span>{o.quantity}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Total</span>
+                    <span className="text-slate-500">Total</span>
                     <span className="text-pink-600 font-medium">Rp {o.total.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Laba</span>
+                    <span className="text-slate-500">Laba</span>
                     <span className={profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
                       Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500 text-sm">Status</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor(o.status)}`}>
+                    <span className="text-slate-500">Status</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium ${statusColor(o.status)}`}>
                       {o.status}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Catatan</span>
+                    <span className="text-slate-500">Catatan</span>
                     {o.notes ? (
-                      <div className="text-slate-700 text-right text-sm max-h-12 overflow-y-auto leading-relaxed break-words">
+                      <div className="text-slate-700 text-right text-[11px] max-h-10 overflow-y-auto leading-relaxed break-words">
                         {o.notes}
                       </div>
                     ) : (
@@ -407,19 +407,19 @@ export default function OrdersPage() {
                     )}
                   </div>
                 </div>
-                <div className="mt-3 flex justify-end space-x-2">
+                <div className="mt-2 flex justify-end space-x-1">
                   <button
                     onClick={() => {
                       setEditingOrder(o);
                       setIsModalOpen(true);
                     }}
-                    className="px-2.5 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700"
+                    className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-purple-100 text-purple-700"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => deleteOrder(o.id)}
-                    className="px-2.5 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700"
+                    className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-rose-100 text-rose-700"
                   >
                     Batalkan
                   </button>
@@ -474,25 +474,25 @@ export default function OrdersPage() {
 
       {/* Modal Import */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-bold text-slate-800">📤 Import Order dari CSV</h3>
-              <p className="text-sm text-slate-600 mt-1">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col text-xs">
+            <div className="p-4 border-b">
+              <h3 className="text-base font-bold text-slate-800">📤 Import Order dari CSV</h3>
+              <p className="text-slate-600 mt-0.5">
                 Format kolom wajib: <strong>Tanggal Order, Produk, Pelanggan, Qty, Total, Status</strong>
               </p>
             </div>
 
-            <div className="p-6 flex-1 overflow-auto">
+            <div className="p-4 flex-1 overflow-auto">
               {importError && (
-                <div className="mb-4 p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">
+                <div className="mb-2 p-2 bg-rose-50 text-rose-700 rounded text-[11px]">
                   {importError}
                 </div>
               )}
 
               {!importPreview.length && !importError && (
-                <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center">
-                  <p className="text-slate-600 mb-4">Pilih file CSV order</p>
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
+                  <p className="text-slate-600 mb-2">Pilih file CSV order</p>
                   <input
                     type="file"
                     accept=".csv"
@@ -502,11 +502,11 @@ export default function OrdersPage() {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
+                    className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded text-[11px] font-medium hover:bg-slate-200"
                   >
                     Pilih File CSV
                   </button>
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-[10px] text-slate-500 mt-1.5">
                     Contoh format tersedia di <button
                       onClick={() => exportToCSV([], products, customers)}
                       className="text-pink-600 underline"
@@ -517,19 +517,19 @@ export default function OrdersPage() {
 
               {importPreview.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-slate-800 mb-3">
+                  <h4 className="font-medium text-slate-800 mb-1.5">
                     Preview ({importPreview.length} order):
                   </h4>
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
                     {importPreview.slice(0, 5).map((item, idx) => (
-                      <div key={idx} className="text-sm p-3 bg-slate-50 rounded">
+                      <div key={idx} className="text-[11px] p-2 bg-slate-50 rounded">
                         <div>Produk: {getProductName(item.productId)}</div>
                         <div>Pelanggan: {getCustomerName(item.customerId)}</div>
                         <div>Total: Rp {item.total?.toLocaleString()}</div>
                       </div>
                     ))}
                     {importPreview.length > 5 && (
-                      <p className="text-xs text-slate-500">
+                      <p className="text-[10px] text-slate-500">
                         +{importPreview.length - 5} order lainnya...
                       </p>
                     )}
@@ -538,25 +538,25 @@ export default function OrdersPage() {
               )}
             </div>
 
-            <div className="p-6 border-t flex justify-end gap-3">
+            <div className="p-4 border-t flex justify-end gap-2">
               <button
                 onClick={() => {
                   setIsImportModalOpen(false);
                   setImportPreview([]);
                   setImportError('');
                 }}
-                className="px-4 py-2 text-slate-700 font-medium"
+                className="px-2.5 py-1 text-slate-700 font-medium text-[11px]"
               >
                 Batal
               </button>
               <button
                 onClick={handleImportConfirm}
                 disabled={importPreview.length === 0}
-                className={`px-4 py-2 font-medium rounded-lg ${
+                className={`px-2.5 py-1 font-medium rounded ${
                   importPreview.length === 0
                     ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
                     : 'bg-emerald-500 text-white hover:bg-emerald-600'
-                }`}
+                } text-[11px]`}
               >
                 Import {importPreview.length > 0 && `(${importPreview.length})`}
               </button>

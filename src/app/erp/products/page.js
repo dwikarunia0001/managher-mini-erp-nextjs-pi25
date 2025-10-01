@@ -188,9 +188,9 @@ export default function ProductsPage() {
 
   const getStockBadge = (stock) => {
     if (stock === undefined) return <span className="text-slate-400">—</span>;
-    if (stock === 0) return <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">Habis</span>;
-    if (stock <= 5) return <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">{stock}</span>;
-    return <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">{stock}</span>;
+    if (stock === 0) return <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-red-100 text-red-700">Habis</span>;
+    if (stock <= 5) return <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-orange-100 text-orange-700">{stock}</span>;
+    return <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-700">{stock}</span>;
   };
 
   const getProfitPerUnit = (p) => {
@@ -238,29 +238,29 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="max-w-[970px] mx-auto px-4 lg:px-6 py-6">
+    <div className="max-w-[970px] mx-auto px-3 lg:px-4 py-4 text-xs">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">📦 Produk</h1>
-          <p className="text-slate-600 text-sm mt-1">Kelola produk & pantau laba per unit.</p>
+          <h1 className="text-xl font-bold text-slate-800">📦 Produk</h1>
+          <p className="text-slate-600 mt-0.5">Kelola produk & pantau laba per unit.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             onClick={() => exportToCSV(products)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
+            className="px-2.5 py-1 text-[11px] font-medium rounded bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
           >
             📤 Export CSV
           </button>
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 shadow-sm"
+            className="px-2.5 py-1 text-[11px] font-medium rounded bg-emerald-100 text-emerald-700 hover:bg-emerald-200 shadow-sm"
           >
             📥 Import CSV
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-5 py-2.5 text-sm font-medium rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-sm hover:shadow-md transition-shadow"
+            className="px-3 py-1 text-[11px] font-medium rounded bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-sm hover:shadow"
           >
             + Tambah Produk
           </button>
@@ -268,18 +268,18 @@ export default function ProductsPage() {
       </div>
 
       {/* Controls */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
         <input
           type="text"
           placeholder="Cari produk..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         />
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         >
           {categories.map(cat => (
             <option key={cat} value={cat}>
@@ -290,7 +290,7 @@ export default function ProductsPage() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
+          className="px-2.5 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-pink-200 focus:border-pink-500 outline-none text-[11px]"
         >
           <option value="name">Sortir: Nama</option>
           <option value="price">Sortir: Harga Jual</option>
@@ -299,29 +299,29 @@ export default function ProductsPage() {
       </div>
 
       {/* Desktop: Tabel */}
-      <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-max text-sm">
+          <table className="w-full min-w-max">
             <thead className="bg-pink-50 text-pink-700">
               <tr>
-                <th className="p-4 text-left">#</th>
-                <th className="p-4 text-left">Gambar</th>
-                <th className="p-4 text-left">Nama</th>
-                <th className="p-4 text-left whitespace-nowrap">Harga Jual</th>
-                <th className="p-4 text-left whitespace-nowrap">Biaya Bahan</th>
-                <th className="p-4 text-left whitespace-nowrap">Biaya Lain-lain</th>
-                <th className="p-4 text-left">L/R per Unit</th>
-                <th className="p-4 text-left">Kategori</th>
-                <th className="p-4 text-left">Stok</th>
-                <th className="p-4 text-left">Aksi</th>
+                <th className="p-2 text-left">#</th>
+                <th className="p-2 text-left">Gambar</th>
+                <th className="p-2 text-left">Nama</th>
+                <th className="p-2 text-left whitespace-nowrap">Harga Jual</th>
+                <th className="p-2 text-left whitespace-nowrap">Biaya Bahan</th>
+                <th className="p-2 text-left whitespace-nowrap">Biaya Lain-lain</th>
+                <th className="p-2 text-left">L/R per Unit</th>
+                <th className="p-2 text-left">Kategori</th>
+                <th className="p-2 text-left">Stok</th>
+                <th className="p-2 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan="10" className="p-12 text-center text-slate-500">
-                    <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-3">
-                      <span className="text-pink-500 text-lg">📦</span>
+                  <td colSpan="10" className="p-6 text-center text-slate-500">
+                    <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-1.5">
+                      <span className="text-pink-500 text-sm">📦</span>
                     </div>
                     Tidak ada produk yang cocok.
                   </td>
@@ -331,43 +331,43 @@ export default function ProductsPage() {
                   const profit = getProfitPerUnit(p);
                   return (
                     <tr key={p.id} className="hover:bg-pink-50">
-                      <td className="p-4 text-slate-500 font-medium">{index + 1}</td>
-                      <td className="p-4 w-16">
+                      <td className="p-2 text-slate-500 font-medium">{index + 1}</td>
+                      <td className="p-2 w-10">
                         {p.image ? (
                           <img
                             src={p.image}
                             alt={p.name}
-                            className="w-12 h-12 object-cover rounded-lg border border-slate-200"
+                            className="w-8 h-8 object-cover rounded border border-slate-200"
                             onError={handleImageError}
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 text-xs">
+                          <div className="w-8 h-8 bg-slate-100 rounded border border-slate-200 flex items-center justify-center text-slate-400 text-[10px]">
                             —
                           </div>
                         )}
                       </td>
-                      <td className="p-4 font-medium text-slate-800 max-w-xs break-words">{p.name}</td>
-                      <td className="p-4 text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</td>
-                      <td className="p-4 text-slate-700">Rp {Number(p.materialCost).toLocaleString()}</td>
-                      <td className="p-4 text-slate-700">Rp {Number(p.otherCost).toLocaleString()}</td>
-                      <td className={`p-4 font-medium ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <td className="p-2 font-medium text-slate-800 max-w-xs break-words">{p.name}</td>
+                      <td className="p-2 text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</td>
+                      <td className="p-2 text-slate-700">Rp {Number(p.materialCost).toLocaleString()}</td>
+                      <td className="p-2 text-slate-700">Rp {Number(p.otherCost).toLocaleString()}</td>
+                      <td className={`p-2 font-medium ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                       </td>
-                      <td className="p-4 text-slate-700">{p.category || '—'}</td>
-                      <td className="p-4">{getStockBadge(p.stock)}</td>
-                      <td className="p-4 text-right space-x-3">
+                      <td className="p-2 text-slate-700">{p.category || '—'}</td>
+                      <td className="p-2">{getStockBadge(p.stock)}</td>
+                      <td className="p-2 text-center space-x-1">
                         <button
                           onClick={() => {
                             setEditing(p);
                             setIsModalOpen(true);
                           }}
-                          className="px-3 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
+                          className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => deleteProduct(p.id)}
-                          className="px-3 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700 hover:bg-rose-200"
+                          className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-rose-100 text-rose-700 hover:bg-rose-200"
                         >
                           Hapus
                         </button>
@@ -381,12 +381,12 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Mobile: Card List — SESUAI POLA ORDERS */}
-      <div className="md:hidden space-y-4">
+      {/* Mobile: Card List */}
+      <div className="md:hidden space-y-2">
         {filteredProducts.length === 0 ? (
-          <div className="bg-white rounded-xl p-6 text-center text-slate-500 border border-slate-200">
-            <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-3">
-              <span className="text-pink-500 text-lg">📦</span>
+          <div className="bg-white rounded-lg p-4 text-center text-slate-500 border border-slate-200">
+            <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mx-auto mb-1.5">
+              <span className="text-pink-500 text-sm">📦</span>
             </div>
             <p>Tidak ada produk yang cocok.</p>
           </div>
@@ -394,62 +394,62 @@ export default function ProductsPage() {
           filteredProducts.map((p) => {
             const profit = getProfitPerUnit(p);
             return (
-              <div key={p.id} className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="space-y-2">
+              <div key={p.id} className="bg-white rounded-lg p-3 border border-slate-200">
+                <div className="space-y-1">
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Nama</span>
+                    <span className="text-slate-500">Nama</span>
                     <span className="font-medium text-slate-800">{p.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Harga Jual</span>
+                    <span className="text-slate-500">Harga Jual</span>
                     <span className="text-pink-600 font-medium">Rp {Number(p.price).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Biaya Bahan</span>
+                    <span className="text-slate-500">Biaya Bahan</span>
                     <span>Rp {Number(p.materialCost).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Biaya Lain-lain</span>
+                    <span className="text-slate-500">Biaya Lain-lain</span>
                     <span>Rp {Number(p.otherCost).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Laba/Unit</span>
+                    <span className="text-slate-500">Laba/Unit</span>
                     <span className={profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
                       Rp {Math.abs(profit).toLocaleString()} {profit < 0 && '(Rugi)'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 text-sm">Kategori</span>
+                    <span className="text-slate-500">Kategori</span>
                     <span>{p.category || '—'}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500 text-sm">Stok</span>
+                    <span className="text-slate-500">Stok</span>
                     {getStockBadge(p.stock)}
                   </div>
                   {p.image && (
-                    <div className="pt-2">
+                    <div className="pt-1.5">
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="w-full h-32 object-contain rounded-lg border border-slate-200"
+                        className="w-full h-20 object-contain rounded border border-slate-200"
                         onError={handleImageError}
                       />
                     </div>
                   )}
                 </div>
-                <div className="mt-4 flex justify-end space-x-2">
+                <div className="mt-2 flex justify-end space-x-1">
                   <button
                     onClick={() => {
                       setEditing(p);
                       setIsModalOpen(true);
                     }}
-                    className="px-2.5 py-1 text-xs font-medium rounded bg-purple-100 text-purple-700"
+                    className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-purple-100 text-purple-700"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => deleteProduct(p.id)}
-                    className="px-2.5 py-1 text-xs font-medium rounded bg-rose-100 text-rose-700"
+                    className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-rose-100 text-rose-700"
                   >
                     Hapus
                   </button>
@@ -484,25 +484,25 @@ export default function ProductsPage() {
 
       {/* Modal Import */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-bold text-slate-800">📤 Import Produk dari CSV</h3>
-              <p className="text-sm text-slate-600 mt-1">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col text-xs">
+            <div className="p-4 border-b">
+              <h3 className="text-base font-bold text-slate-800">📤 Import Produk dari CSV</h3>
+              <p className="text-slate-600 mt-0.5">
                 Format kolom wajib: <strong>Nama, Harga Jual, Biaya Bahan, Biaya Lain-lain</strong>
               </p>
             </div>
 
-            <div className="p-6 flex-1 overflow-auto">
+            <div className="p-4 flex-1 overflow-auto">
               {importError && (
-                <div className="mb-4 p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">
+                <div className="mb-2 p-2 bg-rose-50 text-rose-700 rounded text-[11px]">
                   {importError}
                 </div>
               )}
 
               {!importPreview.length && !importError && (
-                <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center">
-                  <p className="text-slate-600 mb-4">Pilih file CSV produk</p>
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
+                  <p className="text-slate-600 mb-2">Pilih file CSV produk</p>
                   <input
                     type="file"
                     accept=".csv"
@@ -512,11 +512,11 @@ export default function ProductsPage() {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
+                    className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded text-[11px] font-medium hover:bg-slate-200"
                   >
                     Pilih File CSV
                   </button>
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-[10px] text-slate-500 mt-1.5">
                     Contoh format tersedia di{' '}
                     <button
                       onClick={() => exportToCSV([])}
@@ -530,19 +530,19 @@ export default function ProductsPage() {
 
               {importPreview.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-slate-800 mb-3">
+                  <h4 className="font-medium text-slate-800 mb-1.5">
                     Preview ({importPreview.length} produk):
                   </h4>
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
                     {importPreview.slice(0, 5).map((item, idx) => (
-                      <div key={idx} className="text-sm p-3 bg-slate-50 rounded">
+                      <div key={idx} className="text-[11px] p-2 bg-slate-50 rounded">
                         <div><span className="font-medium">Nama:</span> {item.name}</div>
                         <div>Harga: Rp {item.price?.toLocaleString()}</div>
                         <div>Biaya: Rp {(item.materialCost + item.otherCost)?.toLocaleString()}</div>
                       </div>
                     ))}
                     {importPreview.length > 5 && (
-                      <p className="text-xs text-slate-500">
+                      <p className="text-[10px] text-slate-500">
                         +{importPreview.length - 5} produk lainnya...
                       </p>
                     )}
@@ -551,25 +551,25 @@ export default function ProductsPage() {
               )}
             </div>
 
-            <div className="p-6 border-t flex justify-end gap-3">
+            <div className="p-4 border-t flex justify-end gap-2">
               <button
                 onClick={() => {
                   setIsImportModalOpen(false);
                   setImportPreview([]);
                   setImportError('');
                 }}
-                className="px-4 py-2 text-slate-700 font-medium"
+                className="px-2.5 py-1 text-slate-700 font-medium text-[11px]"
               >
                 Batal
               </button>
               <button
                 onClick={handleImportConfirm}
                 disabled={importPreview.length === 0}
-                className={`px-4 py-2 font-medium rounded-lg ${
+                className={`px-2.5 py-1 font-medium rounded ${
                   importPreview.length === 0
                     ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
                     : 'bg-emerald-500 text-white hover:bg-emerald-600'
-                }`}
+                } text-[11px]`}
               >
                 Import {importPreview.length > 0 && `(${importPreview.length})`}
               </button>
