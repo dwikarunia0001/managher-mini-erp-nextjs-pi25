@@ -461,22 +461,27 @@ export default function ProfitLossPage() {
       {filteredData.length > 0 && (
         <section className="mt-6">
           <h2 className="text-sm font-semibold text-slate-800 mb-3">📈 Visualisasi Data</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Grafik 1: Produk Paling Untung / Rugi */}
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Produk Paling Untung / Rugi</h3>
-              <div className="h-[180px] w-full">
+              <div className="w-full aspect-video max-h-[30vh] bg-gray-50 rounded">
                 <canvas id="productProfitChart"></canvas>
               </div>
             </div>
+
+            {/* Grafik 2: Pendapatan vs Biaya */}
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Pendapatan vs Biaya</h3>
-              <div className="h-[180px] w-full">
+              <div className="w-full aspect-video max-h-[30vh] bg-gray-50 rounded">
                 <canvas id="revenueCostChart"></canvas>
               </div>
             </div>
+
+            {/* Grafik 3: Tren Laba Harian */}
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Tren Laba Harian</h3>
-              <div className="h-[160px] w-full">
+              <div className="w-full aspect-video max-h-[30vh] bg-gray-50 rounded">
                 <canvas id="trendChart"></canvas>
               </div>
             </div>
