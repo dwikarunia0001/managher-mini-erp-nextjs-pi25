@@ -37,38 +37,38 @@ export default function ProfitLossPage() {
   const [sort, setSort] = useState('date');
 
   // Ref untuk chart
-  const productChartInstance = useRef(null);
-  const doughnutChartInstance = useRef(null);
-  const trendChartInstance = useRef(null);
+  const productChartRef = useRef(null);
+  const doughnutChartRef = useRef(null);
+  const trendChartRef = useRef(null);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const allData = useMemo(() => {
-    const data = [];
-    for (const order of orders) {
-      if (order.status !== 'Selesai') continue;
-      const product = products.find(p => p.id == order.productId);
-      if (!product) continue;
+    return orders
+      .filter(order => order.status === 'Selesai')
+      .map(order => {
+        const product = products.find(p => p.id == order.productId);
+        if (!product) return null;
 
-      const revenue = order.total || 0;
-      const materialCost = (product.materialCost || 0) * (order.quantity || 0);
-      const otherCost = (product.otherCost || 0) * (order.quantity || 0);
-      const profit = revenue - materialCost - otherCost;
+        const revenue = order.total || 0;
+        const materialCost = (product.materialCost || 0) * (order.quantity || 0);
+        const otherCost = (product.otherCost || 0) * (order.quantity || 0);
+        const profit = revenue - materialCost - otherCost;
 
-      data.push({
-        orderId: order.id,
-        date: order.date,
-        productName: product.name,
-        quantity: order.quantity,
-        revenue,
-        materialCost,
-        otherCost,
-        profit
-      });
-    }
-    return data;
+        return {
+          orderId: order.id,
+          date: order.date,
+          productName: product.name,
+          quantity: order.quantity,
+          revenue,
+          materialCost,
+          otherCost,
+          profit
+        };
+      })
+      .filter(Boolean);
   }, [orders, products]);
 
   const filteredData = useMemo(() => {
@@ -93,31 +93,34 @@ export default function ProfitLossPage() {
   }, [allData, search, dateFilter, sort]);
 
   const summary = useMemo(() => {
-    const totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
-    const totalMaterial = filteredData.reduce((sum, item) => sum + item.materialCost, 0);
-    const totalOther = filteredData.reduce((sum, item) => sum + item.otherCost, 0);
-    const totalProfit = filteredData.reduce((sum, item) => sum + item.profit, 0);
-    return { totalRevenue, totalMaterial, totalOther, totalProfit };
+    return filteredData.reduce(
+      (acc, item) => {
+        acc.totalRevenue += item.revenue;
+        acc.totalMaterial += item.materialCost;
+        acc.totalOther += item.otherCost;
+        acc.totalProfit += item.profit;
+        return acc;
+      },
+      { totalRevenue: 0, totalMaterial: 0, totalOther: 0, totalProfit: 0 }
+    );
   }, [filteredData]);
 
   const isProfit = summary.totalProfit >= 0;
 
-  // Render chart hanya setelah DOM ready dan data ada
+  // Render Chart.js
   useEffect(() => {
     if (typeof window === 'undefined' || !filteredData.length) return;
 
-    const scriptId = 'chartjs-script';
-    let script = document.getElementById(scriptId);
+    let Chart;
+    const loadChart = async () => {
+      // Dinamis import Chart.js
+      const chartModule = await import('chart.js/auto');
+      Chart = chartModule.Chart;
 
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-      document.head.appendChild(script);
-    }
-
-    const renderCharts = () => {
-      if (!window.Chart) return;
+      // Hancurkan chart lama
+      if (productChartRef.current) productChartRef.current.destroy();
+      if (doughnutChartRef.current) doughnutChartRef.current.destroy();
+      if (trendChartRef.current) trendChartRef.current.destroy();
 
       // 1. Laba per Produk
       const productProfitMap = {};
@@ -126,19 +129,17 @@ export default function ProfitLossPage() {
       });
       const productLabels = Object.keys(productProfitMap);
       const productProfits = Object.values(productProfitMap);
-      const productBg = productProfits.map(p => p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(244, 63, 94, 0.7)');
 
-      const ctx2 = document.getElementById('productProfitChart');
-      if (ctx2 && window.Chart) {
-        if (productChartInstance.current) productChartInstance.current.destroy();
-        productChartInstance.current = new window.Chart(ctx2, {
+      const ctx1 = document.getElementById('productProfitChart');
+      if (ctx1) {
+        productChartRef.current = new Chart(ctx1, {
           type: 'bar',
           data: {
             labels: productLabels,
             datasets: [{
-              label: 'Total Laba/Rugi per Produk (Rp)',
+              label: 'Laba/Rugi per Produk (Rp)',
               data: productProfits,
-              backgroundColor: productBg,
+              backgroundColor: productProfits.map(p => p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(244, 63, 94, 0.7)'),
               borderColor: productProfits.map(p => p >= 0 ? 'rgb(16, 185, 129)' : 'rgb(244, 63, 94)'),
               borderWidth: 1
             }]
@@ -147,17 +148,10 @@ export default function ProfitLossPage() {
             indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (context) => `Total: Rp ${Math.abs(context.parsed.x).toLocaleString()} ${context.parsed.x < 0 ? '(Rugi)' : ''}`
-                }
-              }
-            },
+            plugins: { legend: { display: false } },
             scales: {
               x: {
-                ticks: { callback: (value) => `Rp ${Math.abs(value).toLocaleString()}` }
+                ticks: { callback: (value) => `Rp${Math.abs(value).toLocaleString()}` }
               }
             }
           }
@@ -165,10 +159,9 @@ export default function ProfitLossPage() {
       }
 
       // 2. Pendapatan vs Biaya
-      const ctx3 = document.getElementById('revenueCostChart');
-      if (ctx3 && window.Chart) {
-        if (doughnutChartInstance.current) doughnutChartInstance.current.destroy();
-        doughnutChartInstance.current = new window.Chart(ctx3, {
+      const ctx2 = document.getElementById('revenueCostChart');
+      if (ctx2) {
+        doughnutChartRef.current = new Chart(ctx2, {
           type: 'doughnut',
           data: {
             labels: ['Pendapatan', 'Biaya Bahan', 'Biaya Lain'],
@@ -206,10 +199,9 @@ export default function ProfitLossPage() {
       const trendDates = Object.keys(dailyProfit).sort();
       const trendValues = trendDates.map(date => dailyProfit[date]);
 
-      const ctx4 = document.getElementById('trendChart');
-      if (ctx4 && window.Chart) {
-        if (trendChartInstance.current) trendChartInstance.current.destroy();
-        trendChartInstance.current = new window.Chart(ctx4, {
+      const ctx3 = document.getElementById('trendChart');
+      if (ctx3) {
+        trendChartRef.current = new Chart(ctx3, {
           type: 'line',
           data: {
             labels: trendDates,
@@ -226,12 +218,10 @@ export default function ProfitLossPage() {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false }
-            },
+            plugins: { legend: { display: false } },
             scales: {
               y: {
-                ticks: { callback: (value) => `Rp ${value.toLocaleString()}` }
+                ticks: { callback: (value) => `Rp${value.toLocaleString()}` }
               },
               x: {
                 ticks: { 
@@ -247,36 +237,21 @@ export default function ProfitLossPage() {
       }
     };
 
-    if (window.Chart) {
-      renderCharts();
-    } else {
-      script.onload = renderCharts;
-    }
+    loadChart();
 
-    const handleResize = () => {
-      if (productChartInstance.current) productChartInstance.current.resize();
-      if (doughnutChartInstance.current) doughnutChartInstance.current.resize();
-      if (trendChartInstance.current) trendChartInstance.current.resize();
-    };
-
-    window.addEventListener('resize', handleResize);
-
+    // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
-      [productChartInstance, doughnutChartInstance, trendChartInstance].forEach(ref => {
-        if (ref.current) ref.current.destroy();
-      });
-      if (script && document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
+      if (productChartRef.current) productChartRef.current.destroy();
+      if (doughnutChartRef.current) doughnutChartRef.current.destroy();
+      if (trendChartRef.current) trendChartRef.current.destroy();
     };
   }, [filteredData, summary]);
 
   return (
-    <div className="w-full px-4 py-5 sm:px-5 sm:py-6">
+    <div className="w-full max-w-7xl mx-auto px-4 py-5 sm:px-6 sm:py-6">
       {/* Header */}
-      <div className="mb-5 sm:mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-lg sm:text-xl font-bold text-slate-800">📈 Laporan Laba / Rugi</h1>
             <p className="text-slate-600 text-xs mt-1">
@@ -289,80 +264,34 @@ export default function ProfitLossPage() {
         </div>
       </div>
 
-      {/* Filter */}
-      <section className="mb-5 sm:mb-6 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-          <h2 className="text-sm font-semibold text-slate-800">🔍 Filter & Ekspor Data</h2>
-          <button
-            onClick={() => exportToCSV(filteredData)}
-            disabled={filteredData.length === 0}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-          >
-            📤 Export ke CSV
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">Cari Produk</label>
-            <input
-              type="text"
-              placeholder="Nama produk..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal Mulai</label>
-            <input
-              type="date"
-              value={dateFilter.start}
-              onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
-              className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal Berakhir</label>
-            <input
-              type="date"
-              value={dateFilter.end}
-              onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
-              className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">Urutkan Berdasarkan</label>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
-            >
-              <option value="date">Terbaru</option>
-              <option value="revenue">Pendapatan Tertinggi</option>
-              <option value="profit">Laba Tertinggi</option>
-            </select>
-          </div>
-        </div>
+      {/* Panduan Rumus */}
+      <section className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h3 className="font-medium text-blue-800 text-sm mb-1">ℹ️ Cara Menghitung Laba/Rugi</h3>
+        <p className="text-sm text-blue-700">
+          <strong>Rumus:</strong>{' '}
+          <code className="font-mono bg-blue-100 px-2 py-1 rounded text-xs">
+            Laba/Rugi = Pendapatan – Biaya Bahan – Biaya Lain
+          </code>
+        </p>
       </section>
 
-      {/* Ringkasan */}
-      <section className="mb-5 sm:mb-6 overflow-x-auto">
+      {/* Ringkasan Keuangan */}
+      <section className="mb-6">
         <h2 className="text-sm font-semibold text-slate-800 mb-3">📊 Ringkasan Keuangan</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-max">
-          <div className="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <p className="text-xs text-slate-600">💰 Pendapatan</p>
             <p className="text-base font-bold text-pink-600">Rp {summary.totalRevenue.toLocaleString()}</p>
           </div>
-          <div className="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <p className="text-xs text-slate-600">🧺 Biaya Bahan</p>
             <p className="text-base font-bold text-amber-600">Rp {summary.totalMaterial.toLocaleString()}</p>
           </div>
-          <div className="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <p className="text-xs text-slate-600">🛠️ Biaya Lain</p>
             <p className="text-base font-bold text-rose-600">Rp {summary.totalOther.toLocaleString()}</p>
           </div>
-          <div className={`p-3 sm:p-4 rounded-xl border shadow-sm ${isProfit ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+          <div className={`p-4 rounded-xl border shadow-sm ${isProfit ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
             <p className="text-xs text-slate-600">{isProfit ? '✅ Laba' : '❌ Rugi'}</p>
             <p className={`text-base font-bold ${isProfit ? 'text-emerald-700' : 'text-rose-700'}`}>
               Rp {Math.abs(summary.totalProfit).toLocaleString()}
@@ -371,74 +300,186 @@ export default function ProfitLossPage() {
         </div>
       </section>
 
-      {/* Detail Transaksi */}
-      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm mb-5 sm:mb-6">
-        <div className="px-4 py-3 sm:px-5 sm:py-4 border-b">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <h2 className="font-semibold text-slate-800 text-sm sm:text-base">📋 Detail Transaksi</h2>
-            <p className="text-xs text-slate-600">{filteredData.length} transaksi ditemukan</p>
+      {/* Filter */}
+      <section className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-sm font-semibold text-slate-800">🔍 Filter & Ekspor Data</h2>
+          <button
+            onClick={() => exportToCSV(filteredData)}
+            disabled={filteredData.length === 0}
+            className="px-3 py-2 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            📤 Export ke CSV
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div>
+            <label className="block text-xs font-medium text-slate-700 mb-1">Cari Produk</label>
+            <input
+              type="text"
+              placeholder="Nama produk..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal Mulai</label>
+            <input
+              type="date"
+              value={dateFilter.start}
+              onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
+              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal Berakhir</label>
+            <input
+              type="date"
+              value={dateFilter.end}
+              onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
+              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-700 mb-1">Urutkan Berdasarkan</label>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-200 outline-none"
+            >
+              <option value="date">Terbaru</option>
+              <option value="revenue">Pendapatan Tertinggi</option>
+              <option value="profit">Laba Tertinggi</option>
+            </select>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-[600px] w-full table-auto text-xs">
-            <thead className="bg-pink-50 text-pink-700">
-              <tr>
-                <th className="p-2 text-left whitespace-nowrap">Tanggal</th>
-                <th className="p-2 text-left whitespace-nowrap">Produk</th>
-                <th className="p-2 text-left whitespace-nowrap">Qty</th>
-                <th className="p-2 text-left whitespace-nowrap">Pendapatan</th>
-                <th className="p-2 text-left whitespace-nowrap">Biaya Bahan</th>
-                <th className="p-2 text-left whitespace-nowrap">Biaya Lain</th>
-                <th className="p-2 text-left whitespace-nowrap">Laba</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredData.length === 0 ? (
+
+        {/* Detail Transaksi — Switch Layout */}
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+          <div className="px-4 py-3 sm:px-5 sm:py-4 border-b">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h2 className="font-semibold text-slate-800 text-sm">📋 Detail Transaksi</h2>
+              <p className="text-xs text-slate-600">{filteredData.length} transaksi ditemukan</p>
+            </div>
+          </div>
+
+          {/* TABEL (Desktop) */}
+          <div className="hidden sm:block overflow-auto max-h-[60vh]">
+            <table className="min-w-full table-auto text-xs">
+              <thead className="bg-pink-50 text-pink-700 sticky top-0 z-10">
                 <tr>
-                  <td colSpan="7" className="p-6 sm:p-8 text-center text-slate-500">
-                    Tidak ada data.
-                  </td>
+                  <th className="p-2 text-left whitespace-nowrap">Tanggal</th>
+                  <th className="p-2 text-left whitespace-nowrap">Produk</th>
+                  <th className="p-2 text-left whitespace-nowrap">Qty</th>
+                  <th className="p-2 text-left whitespace-nowrap">Pendapatan</th>
+                  <th className="p-2 text-left whitespace-nowrap">Biaya Bahan</th>
+                  <th className="p-2 text-left whitespace-nowrap">Biaya Lain</th>
+                  <th className="p-2 text-left whitespace-nowrap">Laba</th>
                 </tr>
-              ) : (
-                filteredData.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-pink-50">
-                    <td className="p-2 whitespace-nowrap">{item.date}</td>
-                    <td className="p-2 font-medium truncate max-w-[100px] sm:max-w-[150px]" title={item.productName}>{item.productName}</td>
-                    <td className="p-2 text-center whitespace-nowrap">{item.quantity}</td>
-                    <td className="p-2 text-pink-600 font-medium whitespace-nowrap">Rp {item.revenue.toLocaleString()}</td>
-                    <td className="p-2 text-amber-600 whitespace-nowrap">Rp {item.materialCost.toLocaleString()}</td>
-                    <td className="p-2 text-rose-600 whitespace-nowrap">Rp {item.otherCost.toLocaleString()}</td>
-                    <td className={`p-2 font-medium whitespace-nowrap ${item.profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                      Rp {Math.abs(item.profit).toLocaleString()} {item.profit < 0 && '(Rugi)'}
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredData.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="p-6 text-center text-slate-500">
+                      Tidak ada data.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredData.map((item, idx) => (
+                    <tr key={idx} className="hover:bg-pink-50">
+                      <td className="p-2 whitespace-nowrap">{item.date}</td>
+                      <td className="p-2 font-medium truncate max-w-[150px]" title={item.productName}>
+                        {item.productName}
+                      </td>
+                      <td className="p-2 text-center whitespace-nowrap">{item.quantity}</td>
+                      <td className="p-2 text-pink-600 font-medium whitespace-nowrap">Rp {item.revenue.toLocaleString()}</td>
+                      <td className="p-2 text-amber-600 whitespace-nowrap">Rp {item.materialCost.toLocaleString()}</td>
+                      <td className="p-2 text-rose-600 whitespace-nowrap">Rp {item.otherCost.toLocaleString()}</td>
+                      <td className={`p-2 font-medium whitespace-nowrap ${item.profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        Rp {Math.abs(item.profit).toLocaleString()} {item.profit < 0 && '(Rugi)'}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* CARD (Mobile) */}
+          <div className="block sm:hidden overflow-y-auto max-h-[60vh] space-y-3 p-3">
+            {filteredData.length === 0 ? (
+              <div className="text-center text-slate-500 py-6">
+                Tidak ada data.
+              </div>
+            ) : (
+              filteredData.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:bg-slate-50 transition-colors"
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">📅 Tanggal</span>
+                      <span className="font-medium text-slate-800">{item.date}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">📦 Produk</span>
+                      <span className="font-medium text-slate-800 truncate" title={item.productName}>
+                        {item.productName}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">🔢 Qty</span>
+                      <span className="font-medium text-slate-800 text-center">{item.quantity}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">💰 Pendapatan</span>
+                      <span className="font-medium text-pink-600">Rp {item.revenue.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">🧺 Biaya Bahan</span>
+                      <span className="font-medium text-amber-600">Rp {item.materialCost.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">🛠️ Biaya Lain</span>
+                      <span className="font-medium text-rose-600">Rp {item.otherCost.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-slate-600">📈 Laba</span>
+                      <span className={`font-medium ${item.profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        Rp {Math.abs(item.profit).toLocaleString()} {item.profit < 0 && '(Rugi)'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Visualisasi */}
+      {/* Visualisasi Data */}
       {filteredData.length > 0 && (
-        <section>
+        <section className="mt-6">
           <h2 className="text-sm font-semibold text-slate-800 mb-3">📈 Visualisasi Data</h2>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Produk Paling Untung / Rugi</h3>
-              <div className="h-[160px] sm:h-[180px] md:h-[200px] w-full">
+              <div className="h-[180px] w-full">
                 <canvas id="productProfitChart"></canvas>
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Pendapatan vs Biaya</h3>
-              <div className="h-[160px] sm:h-[180px] md:h-[200px] w-full">
+              <div className="h-[180px] w-full">
                 <canvas id="revenueCostChart"></canvas>
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-medium text-slate-700 text-xs mb-2">Tren Laba Harian</h3>
-              <div className="h-[140px] sm:h-[160px] md:h-[180px] w-full">
+              <div className="h-[160px] w-full">
                 <canvas id="trendChart"></canvas>
               </div>
             </div>

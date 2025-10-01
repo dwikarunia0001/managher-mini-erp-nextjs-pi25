@@ -102,7 +102,7 @@ export default function Modal({ title, fields, initialValues, onSubmit, onClose 
             </div>
           </div>
 
-          <div className="max-h-[80vh] overflow-y-auto p-6 pb-20">
+          <div className="max-h-[80vh] overflow-y-auto p-6 pb-30">
             <form id="modal-form" onSubmit={handleSubmit} className="space-y-5">
               {fields.map((field, index) => {
                 const classes = getColorClasses(index);

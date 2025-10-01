@@ -9,7 +9,7 @@ export default function GuidePage() {
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-slate-800 mb-4">✨ Panduan Memulai</h1>
         <p className="text-slate-600 max-w-2xl mx-auto">
-          Ikuti 4 langkah sederhana ini untuk mulai kelola bisnismu dengan ManagHer Mini ERP.
+          Ikuti 5 langkah sederhana ini untuk mulai kelola bisnismu dengan ManagHer Mini ERP.
         </p>
       </div>
 
@@ -53,12 +53,21 @@ export default function GuidePage() {
           },
           {
             step: 4,
-            title: "Lihat Laba / Rugi di Dashboard",
+            title: "Lihat Laba / Rugi",
             desc: "Semua data otomatis terhitung: pendapatan, pengeluaran, dan laba/rugi.",
             example: "Contoh:\n• Total pendapatan: Rp 75.000\n• Total biaya produksi: Rp 45.000\n• Laba bersih: Rp 30.000 💰",
             color: "purple",
-            href: "/erp/dashboard",
+            href: "/erp/profit-loss",
             cta: "Laba & Rugi"
+          },
+          {
+            step: 5,
+            title: "Lihat Dashboard Utama",
+            desc: "Pantau seluruh aktivitas bisnismu dalam satu halaman: order terbaru, produk laris, pelanggan setia, dan performa keuntungan.",
+            example: "Contoh:\n• Order hari ini: 3\n• Produk terlaris: Brownies Coklat\n• Laba minggu ini: Rp 150.000\n• Pelanggan aktif: 12 orang",
+            color: "amber",
+            href: "/erp/dashboard",
+            cta: "Dashboard"
           }
         ].map((step, idx) => (
           <div
@@ -67,7 +76,8 @@ export default function GuidePage() {
               step.color === 'pink' ? 'bg-pink-50 border-pink-200' :
               step.color === 'blue' ? 'bg-blue-50 border-blue-200' :
               step.color === 'green' ? 'bg-green-50 border-green-200' :
-              'bg-purple-50 border-purple-200'
+              step.color === 'purple' ? 'bg-purple-50 border-purple-200' :
+              'bg-amber-50 border-amber-200'
             }`}
           >
             <div className="flex flex-col md:flex-row gap-6">
@@ -75,7 +85,8 @@ export default function GuidePage() {
                 step.color === 'pink' ? 'bg-pink-100 text-pink-700' :
                 step.color === 'blue' ? 'bg-blue-100 text-blue-700' :
                 step.color === 'green' ? 'bg-green-100 text-green-700' :
-                'bg-purple-100 text-purple-700'
+                step.color === 'purple' ? 'bg-purple-100 text-purple-700' :
+                'bg-amber-100 text-amber-700'
               }`}>
                 <span className="font-bold text-lg">{step.step}</span>
               </div>
@@ -91,7 +102,8 @@ export default function GuidePage() {
                     step.color === 'pink' ? 'text-pink-600 hover:text-pink-800' :
                     step.color === 'blue' ? 'text-blue-600 hover:text-blue-800' :
                     step.color === 'green' ? 'text-green-600 hover:text-green-800' :
-                    'text-purple-600 hover:text-purple-800'
+                    step.color === 'purple' ? 'text-purple-600 hover:text-purple-800' :
+                    'text-amber-600 hover:text-amber-800'
                   }`}
                 >
                   ➕ Lanjutkan ke {step.cta}
@@ -110,7 +122,7 @@ export default function GuidePage() {
             Tidak perlu jadi akuntan. Cukup jadi dirimu yang jago bikin produk! 💖
           </p>
           <Link
-            href="/erp/dashboard"
+            href="/erp/products"
             className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-0.5"
           >
             ✨ Mulai Buat Produkmu Sekarang

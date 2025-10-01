@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { usePathname } from 'next/navigation';
 
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {

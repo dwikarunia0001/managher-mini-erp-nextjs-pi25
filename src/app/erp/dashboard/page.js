@@ -19,10 +19,9 @@ export default function DashboardPage() {
   }, []);
 
   // === ANALITIK UTAMA ===
-  const totalProducts = products.length;
-  const totalCustomers = customers.length;
   const totalOrders = orders.length;
 
+  // Hitung pendapatan & pengeluaran dari order "Selesai"
   const completedOrders = orders.filter(o => o.status === 'Selesai');
   const totalRevenue = completedOrders.reduce((sum, o) => sum + (o.total || 0), 0);
   const totalExpenses = completedOrders.reduce((sum, o) => {
@@ -32,6 +31,30 @@ export default function DashboardPage() {
     return sum + unitCost * (o.quantity || 0);
   }, 0);
   const netProfit = totalRevenue - totalExpenses;
+
+  // === PRODUK TERLARIS ===
+  const productSales = products.map(product => {
+    const sales = completedOrders
+      .filter(o => o.productId == product.id)
+      .reduce((sum, o) => sum + (o.quantity || 0), 0);
+    return { ...product, totalSold: sales };
+  });
+
+  const bestSellingProduct = productSales.reduce((prev, curr) =>
+    curr.totalSold > prev.totalSold ? curr : prev,
+    { name: '–', totalSold: 0 }
+  );
+
+  // === CUSTOMER SETIA ===
+  const customerOrderCounts = customers.map(customer => {
+    const count = completedOrders.filter(o => o.customerId == customer.id).length;
+    return { ...customer, orderCount: count };
+  });
+
+  const loyalCustomer = customerOrderCounts.reduce((prev, curr) =>
+    curr.orderCount > prev.orderCount ? curr : prev,
+    { name: '–', orderCount: 0 }
+  );
 
   const pendingOrders = orders.filter(o => o.status === 'Menunggu').length;
   const lowStockProducts = products.filter(p => p.stock !== undefined && p.stock <= 5 && p.stock >= 0);
@@ -47,7 +70,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Panduan Pemula */}
-      {(totalProducts === 0 || totalCustomers === 0) && (
+      {(products.length === 0 || customers.length === 0) && (
         <div className="mb-8 p-5 bg-gradient-to-r from-pink-100 to-purple-100 border border-pink-200 rounded-2xl text-center">
           <p className="text-pink-700 font-medium">💖 Halo Pebisnis Pemula!</p>
           <p className="mt-2 text-sm text-pink-600">
@@ -59,11 +82,46 @@ export default function DashboardPage() {
       {/* Statistik Utama — Lebih Colorful! */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-10 text-center">
         {[
-          { title: "Total Produk", value: totalProducts, icon: "📦", bg: "bg-pink-100", text: "text-pink-700", border: "border-pink-200" },
-          { title: "Customer", value: totalCustomers, icon: "👩", bg: "bg-blue-100", text: "text-blue-700", border: "border-blue-200" },
-          { title: "Order", value: totalOrders, icon: "🛒", bg: "bg-green-100", text: "text-green-700", border: "border-green-200" },
-          { title: "Pendapatan", value: `Rp ${totalRevenue.toLocaleString()}`, icon: "💰", bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200" },
-          { title: "Pengeluaran", value: `Rp ${totalExpenses.toLocaleString()}`, icon: "📥", bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-200" }
+          { 
+            title: "Produk Terlaris", 
+            value: bestSellingProduct.name === '–' ? '–' : `${bestSellingProduct.name} (${bestSellingProduct.totalSold})`, 
+            icon: "🔥", 
+            bg: "bg-pink-100", 
+            text: "text-pink-700", 
+            border: "border-pink-200" 
+          },
+          { 
+            title: "Customer Setia", 
+            value: loyalCustomer.name === '–' ? '–' : `${loyalCustomer.name} (${loyalCustomer.orderCount})`, 
+            icon: "👑", 
+            bg: "bg-blue-100", 
+            text: "text-blue-700", 
+            border: "border-blue-200" 
+          },
+          { 
+            title: "Order", 
+            value: totalOrders, 
+            icon: "🛒", 
+            bg: "bg-green-100", 
+            text: "text-green-700", 
+            border: "border-green-200" 
+          },
+          { 
+            title: "Pendapatan", 
+            value: `Rp ${totalRevenue.toLocaleString()}`, 
+            icon: "💰", 
+            bg: "bg-purple-100", 
+            text: "text-purple-700", 
+            border: "border-purple-200" 
+          },
+          { 
+            title: "Pengeluaran", 
+            value: `Rp ${totalExpenses.toLocaleString()}`, 
+            icon: "📥", 
+            bg: "bg-rose-100", 
+            text: "text-rose-700", 
+            border: "border-rose-200" 
+          }
         ].map((stat, i) => (
           <div
             key={i}
@@ -71,7 +129,7 @@ export default function DashboardPage() {
           >
             <div className={`text-2xl ${stat.text} mb-2`}>{stat.icon}</div>
             <h3 className="text-xs font-medium text-slate-600">{stat.title}</h3>
-            <p className="text-lg font-bold mt-1 text-slate-800">{stat.value}</p>
+            <p className="text-lg font-bold mt-1 text-slate-800 truncate">{stat.value}</p>
           </div>
         ))}
       </div>
