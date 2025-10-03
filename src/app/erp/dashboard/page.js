@@ -84,7 +84,7 @@ export default function DashboardPage() {
         {[
           { 
             title: "Produk Terlaris", 
-            value: bestSellingProduct.name === '–' ? '–' : `${bestSellingProduct.name} (${bestSellingProduct.totalSold})`, 
+            value: bestSellingProduct.name === '–' ? '–' : `${bestSellingProduct.name}`, 
             icon: "🔥", 
             bg: "bg-pink-100", 
             text: "text-pink-700", 
@@ -92,7 +92,7 @@ export default function DashboardPage() {
           },
           { 
             title: "Customer Setia", 
-            value: loyalCustomer.name === '–' ? '–' : `${loyalCustomer.name} (${loyalCustomer.orderCount})`, 
+            value: loyalCustomer.name === '–' ? '–' : `${loyalCustomer.name}`, 
             icon: "👑", 
             bg: "bg-blue-100", 
             text: "text-blue-700", 
